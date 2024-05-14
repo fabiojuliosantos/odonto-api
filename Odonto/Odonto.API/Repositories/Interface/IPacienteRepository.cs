@@ -2,11 +2,7 @@
 
 namespace Odonto.API.Repositories.Interface;
 
-public interface IPacienteRepository
+public interface IPacienteRepository : IRepository<Paciente>
 {
-    IEnumerable<Paciente> BuscarTodosPacientes();
-    Paciente BuscarPacientePorId(int id);
-    Paciente CadastrarPaciente(Paciente paciente);
-    Paciente AtualizarPaciente(Paciente paciente);
-    Paciente ExcluirPaciente(Paciente paciente);
+
 }

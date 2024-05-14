@@ -8,7 +8,7 @@ namespace Odonto.API.Services.Interface
         Paciente BuscarPacientePorId(int id);
         Paciente CadastrarPaciente(Paciente paciente);
         Paciente AtualizarPaciente(Paciente paciente);
-        Paciente ExcluirPaciente(int id);
+        Paciente ExcluirPaciente(Paciente paciente);
 
     }
 }

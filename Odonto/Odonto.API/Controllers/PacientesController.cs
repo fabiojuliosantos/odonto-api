@@ -46,11 +46,11 @@ namespace Odonto.API.Controllers
             return Ok(paciente);
         }
 
-        [HttpDelete("excluir-paciente/{id}")]
-        public ActionResult<Paciente>ExcluirPaciente(int id)
+        [HttpDelete("excluir-paciente/")]
+        public ActionResult<Paciente>ExcluirPaciente(Paciente paciente)
         {
-            _service.ExcluirPaciente(id);
-            return Ok($"Paciente de id: {id} excluído com sucesso!");
+            _service.ExcluirPaciente(paciente);
+            return Ok($"Paciente {paciente.Nome}, excluído com sucesso!");
         }
     }
 }

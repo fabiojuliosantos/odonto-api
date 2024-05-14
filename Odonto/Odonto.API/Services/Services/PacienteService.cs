@@ -14,53 +14,50 @@ public class PacienteService : IPacienteService
         _repository = repository;
     }
 
+    #region Buscar
     public IEnumerable<Paciente> BuscarTodosPacientes()
     {
-        var pacientes = _repository.BuscarTodosPacientes();
-
-        if (pacientes is null) throw new Exception("Não existem pacientes cadastrados!");
-
+        var pacientes = _repository.BuscarTodos();
         return pacientes;
     }
     public Paciente BuscarPacientePorId(int id)
     {
-        if (id <= 0 || string.IsNullOrEmpty(id.ToString())) throw new Exception("Valor de id inválido!");
-
-        var paciente = _repository.BuscarPacientePorId(id);
-
-        if (paciente is null) throw new Exception("Paciente informado não está cadastrado!");
-
-        return paciente;
-    }
-    public Paciente AtualizarPaciente(Paciente paciente)
-    {
-        if (paciente is null) throw new Exception("Não foram fornecidos dados do paciente!");
-
-        _repository.AtualizarPaciente(paciente);
-
+        var paciente = _repository.BuscarPorId(p => p.PacienteId == id);
+        if (paciente is null) throw new Exception($"Paciente de id: {id} não foi encontrado!");
         return paciente;
     }
 
+    #endregion Buscar
+
+    #region Cadastrar
     public Paciente CadastrarPaciente(Paciente paciente)
     {
-        if (paciente is null) throw new Exception("Não foram fornecidos dados do paciente!");
-
-        _repository.CadastrarPaciente(paciente);
-
+        if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
+        _repository.Cadastrar(paciente);
         return paciente;
     }
 
-    public Paciente ExcluirPaciente(int id)
+    #endregion Cadastrar
+
+    #region Atualizar
+
+    public Paciente AtualizarPaciente(Paciente paciente)
     {
-        if (id <= 0 || string.IsNullOrEmpty(id.ToString())) throw new Exception("Valor informado para o id é inválido!");
-
-        var paciente = _repository.BuscarPacientePorId(id);
-
-        if (paciente is null) throw new Exception("Paciente não encontrado!");
-        
-        _repository.ExcluirPaciente(paciente);
-        
+        if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
+        _repository.Atualizar(paciente);
         return paciente;
-
     }
+
+    #endregion Atualizar
+
+    #region Excluir
+
+    public Paciente ExcluirPaciente(Paciente paciente)
+    {
+        if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
+        _repository.Deletar(paciente);
+        return paciente;
+    }
+    
+    #endregion Excluir
 }

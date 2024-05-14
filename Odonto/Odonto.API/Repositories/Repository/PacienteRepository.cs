@@ -53,10 +53,8 @@ public class PacienteRepository : IPacienteRepository
     #endregion Atualização
 
     #region Excluir
-    public Paciente ExcluirPaciente(int id)
+    public Paciente ExcluirPaciente(Paciente paciente)
     {
-        var paciente = _context.Pacientes.FirstOrDefault(p => p.PacienteId == id);
-
         _context.Pacientes.Remove(paciente);
         _context.SaveChanges();
         return paciente;

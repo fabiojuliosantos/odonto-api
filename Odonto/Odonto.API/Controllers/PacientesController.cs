@@ -3,6 +3,7 @@ using Odonto.API.Context;
 using Odonto.API.Models;
 using Odonto.API.Repositories.Interface;
 using Odonto.API.Repositories.Repository;
+using Odonto.API.Services.Interface;
 
 namespace Odonto.API.Controllers
 {
@@ -11,17 +12,17 @@ namespace Odonto.API.Controllers
     public class PacientesController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly IPacienteRepository _repository;
-        public PacientesController(AppDbContext context, IPacienteRepository repository)
+        private readonly IPacienteService _service;
+        public PacientesController(AppDbContext context, IPacienteService service)
         {
             _context = context;
-            _repository = repository;
+            _service = service;
         }
         
         [HttpGet]
         public ActionResult<IEnumerable<Paciente>> BuscarTodosPacientes()
         {
-            var pacientes = _repository.BuscarTodosPacientes();
+            var pacientes = _service.BuscarTodosPacientes();
 
             if (pacientes is null) return NotFound();
 

@@ -3,6 +3,8 @@ using Microsoft.OpenApi.Models;
 using Odonto.API.Context;
 using Odonto.API.Repositories.Interface;
 using Odonto.API.Repositories.Repository;
+using Odonto.API.Services.Interface;
+using Odonto.API.Services.Services;
 
 #region Variáveis
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
+builder.Services.AddScoped<IPacienteService, PacienteService>();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -32,7 +35,7 @@ builder.Services.AddSwaggerGen(
         c.SwaggerDoc("v1", new OpenApiInfo
         {
             Title = "API do Centro de Odontologia Especializada",
-            Description = "API de controle de pacientes e consultas",
+            Description = "API de controle de pacientes, dentistas e consultas",
             Version = "v1",
             Contact = new OpenApiContact
             {

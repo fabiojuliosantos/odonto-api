@@ -21,8 +21,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(conectionString);
 });
 
+#region Repositories
 builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
+builder.Services.AddScoped(typeof(IDentistaRepository), typeof(DentistaRepository));
+builder.Services.AddScoped(typeof(IConsultaRepository), typeof(ConsultaRepository));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+#endregion Repositories
+
+#region Services
 builder.Services.AddScoped<IPacienteService, PacienteService>();
+
+#endregion Services
 
 builder.Services.AddEndpointsApiExplorer();
 

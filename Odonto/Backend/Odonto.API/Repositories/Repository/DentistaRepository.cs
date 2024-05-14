@@ -4,10 +4,9 @@ using Odonto.API.Repositories.Interface;
 
 namespace Odonto.API.Repositories.Repository;
 
-public class PacienteRepository : Repository<Paciente>, IPacienteRepository
+public class DentistaRepository : Repository<Dentista>, IRepository<Dentista>
 {
-    public PacienteRepository(AppDbContext context) : base(context)
+    public DentistaRepository(AppDbContext context) : base(context)
     {
     }
-
 }

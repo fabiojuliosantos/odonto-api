@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Odonto.API.Context;
+using Odonto.API.Repositories.Interface;
+using Odonto.API.Repositories.Repository;
 
 #region Variáveis
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(conectionString);
 });
 
+builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 

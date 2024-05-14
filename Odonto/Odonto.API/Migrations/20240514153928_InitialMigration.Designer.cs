@@ -12,8 +12,8 @@ using Odonto.API.Context;
 namespace Odonto.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240513173542_UtilizandoDataAnnotations")]
-    partial class UtilizandoDataAnnotations
+    [Migration("20240514153928_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

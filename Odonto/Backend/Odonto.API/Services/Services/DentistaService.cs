@@ -31,9 +31,9 @@ public class DentistaService : IDentistaService
     public Dentista CadastrarDentista(Dentista dentista)
     {
         if (dentista is null) throw new Exception("Não foram informados dados para o dentista!");
-        
+
         _repository.Cadastrar(dentista);
-        
+
         return dentista;
     }
 
@@ -53,7 +53,7 @@ public class DentistaService : IDentistaService
     #endregion Atualizar
 
     #region Excluir
-    
+
     public Dentista ExcluirDentista(Dentista dentista)
     {
         if (dentista is null) throw new Exception("Não foram informados dados para o dentista!");
@@ -62,6 +62,6 @@ public class DentistaService : IDentistaService
 
         return dentista;
     }
-    
+
     #endregion Excluir
 }

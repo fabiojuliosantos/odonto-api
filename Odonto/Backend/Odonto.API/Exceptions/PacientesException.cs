@@ -2,9 +2,9 @@
 {
     public class PacientesException : Exception
     {
-        public PacientesException(string mensagem): base(mensagem)
+        public PacientesException(string mensagem) : base(mensagem)
         {
-            
+
         }
     }
 }

@@ -2,8 +2,6 @@
 using Odonto.API.Context;
 using Odonto.API.Models;
 using Odonto.API.Repositories.Interface;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Odonto.API.Repositories.Repository;
 

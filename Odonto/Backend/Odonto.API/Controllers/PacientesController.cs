@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Odonto.API.Context;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Odonto.API.Models;
 using Odonto.API.Services.Interface;
 
@@ -9,11 +9,13 @@ namespace Odonto.API.Controllers
     [ApiController]
     public class PacientesController : ControllerBase
     {
-       
+
         private readonly IPacienteService _service;
-        public PacientesController(AppDbContext context, IPacienteService service)
+        private readonly IMapper _mapper;
+        public PacientesController(IMapper mapper, IPacienteService service)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -47,7 +49,7 @@ namespace Odonto.API.Controllers
         }
 
         [HttpDelete("excluir-paciente/")]
-        public ActionResult<Paciente>ExcluirPaciente(Paciente paciente)
+        public ActionResult<Paciente> ExcluirPaciente(Paciente paciente)
         {
             _service.ExcluirPaciente(paciente);
             return Ok($"Paciente {paciente.Nome}, excluído com sucesso!");

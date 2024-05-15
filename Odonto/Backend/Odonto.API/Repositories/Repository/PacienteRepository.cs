@@ -1,4 +1,5 @@
-﻿using Odonto.API.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Odonto.API.Context;
 using Odonto.API.Models;
 using Odonto.API.Repositories.Interface;
 
@@ -10,4 +11,10 @@ public class PacienteRepository : Repository<Paciente>, IPacienteRepository
     {
     }
 
+    public Paciente BuscarPacientePeloIdConsulta(int id)
+    {
+        var paciente = _context.Pacientes.Include(p => p.Consultas)
+                                         .FirstOrDefault(p => p.PacienteId == id);
+        return paciente;
+    }
 }

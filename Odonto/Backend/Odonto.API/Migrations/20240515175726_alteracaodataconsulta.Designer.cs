@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Odonto.API.Context;
 
@@ -11,9 +12,11 @@ using Odonto.API.Context;
 namespace Odonto.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240515175726_alteracaodataconsulta")]
+    partial class alteracaodataconsulta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,8 +33,8 @@ namespace Odonto.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConsultaId"));
 
-                    b.Property<DateTime>("DataConsulta")
-                        .HasColumnType("DateTime");
+                    b.Property<DateOnly>("DataConsulta")
+                        .HasColumnType("Date");
 
                     b.Property<int>("DentistaId")
                         .HasColumnType("int");
@@ -40,6 +43,9 @@ namespace Odonto.API.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<TimeSpan>("HoraConsulta")
+                        .HasColumnType("Time");
 
                     b.Property<int>("PacienteId")
                         .HasColumnType("int");

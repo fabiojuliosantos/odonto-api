@@ -1,5 +1,4 @@
-﻿using Odonto.API.Exceptions;
-using Odonto.API.Models;
+﻿using Odonto.API.Models;
 using Odonto.API.Repositories.Interface;
 using Odonto.API.Services.Interface;
 
@@ -22,7 +21,7 @@ public class PacienteService : IPacienteService
     }
     public Paciente BuscarPacientePorId(int id)
     {
-        var paciente = _repository.BuscarPorId(p => p.PacienteId == id);
+        var paciente = _repository.BuscarPacientePeloIdConsulta(id);
         if (paciente is null) throw new Exception($"Paciente de id: {id} não foi encontrado!");
         return paciente;
     }
@@ -58,6 +57,6 @@ public class PacienteService : IPacienteService
         _repository.Deletar(paciente);
         return paciente;
     }
-    
+
     #endregion Excluir
 }

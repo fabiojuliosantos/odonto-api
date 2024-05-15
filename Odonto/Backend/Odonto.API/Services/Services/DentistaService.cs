@@ -19,7 +19,7 @@ public class DentistaService : IDentistaService
     }
     public Dentista BuscarPorId(int id)
     {
-        var dentista = _repository.BuscarPorId(d => d.DentistaId == id);
+        var dentista = _repository.BuscarDentistaPeloIdConsulta(id);
         if (dentista is null) throw new Exception($"Dentista de id: {id} não foi encontrado!");
         return dentista;
 

@@ -24,7 +24,7 @@ public class ConsultaService : IConsultaService
     {
         if (id <= 0 || string.IsNullOrEmpty(id.ToString())) throw new Exception("Valor informado para id é inválido!");
 
-        var consulta = _repository.BuscarPorId(c => c.ConsultaId == id);
+        var consulta = _repository.BuscarConsultaComPacienteDentistaPorId(id);
 
         if (consulta is null) throw new Exception($"Consulta de id: {id} não encontrada!");
 

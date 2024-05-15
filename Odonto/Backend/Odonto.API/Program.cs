@@ -5,17 +5,22 @@ using Odonto.API.Repositories.Interface;
 using Odonto.API.Repositories.Repository;
 using Odonto.API.Services.Interface;
 using Odonto.API.Services.Services;
+using System.Text.Json.Serialization;
 
 #region Variáveis
+
 var builder = WebApplication.CreateBuilder(args);
 string conectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 #endregion Variáveis
 
 #region Serviços
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers().AddJsonOptions(options =>
+        options.JsonSerializerOptions
+               .ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
+builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(conectionString);

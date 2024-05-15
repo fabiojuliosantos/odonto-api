@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Odonto.API.Models;
 
@@ -8,6 +9,7 @@ public class Consulta
     [StringLength(100)]
     public string Descricao { get; set; }
     [Required]
+    [Column(TypeName="Date")]
     public DateTime DataConsulta { get; set; }
     public int DentistaId { get; set; }
     public int PacienteId { get; set; }

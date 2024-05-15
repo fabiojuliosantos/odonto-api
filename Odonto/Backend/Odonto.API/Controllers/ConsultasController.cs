@@ -22,9 +22,9 @@ namespace Odonto.API.Controllers
         public ActionResult<ConsultasDTO> BuscarTodasConsultas()
         {
             var consultas = _service.BuscarTodasConsultas();
-
+            
             var consultasDto = _mapper.Map<IEnumerable<ConsultasDTO>>(consultas);
-
+            
             return Ok(consultasDto);
         }
         [HttpGet("buscar-consulta-id/{id}")]
@@ -41,9 +41,9 @@ namespace Odonto.API.Controllers
         public ActionResult<ConsultasCadastroDTO> CadastrarConsulta(ConsultasCadastroDTO consultaDto)
         {
             var consulta = _mapper.Map<Consulta>(consultaDto);
-
+                        
             _service.CadastrarConsulta(consulta);
-
+            
             return Ok(consulta);
         }
 
@@ -53,7 +53,7 @@ namespace Odonto.API.Controllers
             var consulta = _mapper.Map<Consulta>(consultaDto);
 
             _service.AtualizarConsulta(consulta);
-
+            
             return Ok(consulta);
         }
 
@@ -63,7 +63,7 @@ namespace Odonto.API.Controllers
             var consulta = _mapper.Map<Consulta>(consultaDto);
 
             _service.ExcluirConsulta(consulta);
-
+            
             return Ok(consulta);
         }
     }

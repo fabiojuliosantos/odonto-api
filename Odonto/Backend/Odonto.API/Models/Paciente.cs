@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Odonto.API.Models;
 
@@ -16,7 +17,7 @@ public class Paciente
     [StringLength(100)]
     public string Nome { get; set; }
     [Required]
-    [Column(TypeName = "Date")]
+    [Column(TypeName="Date")]
     public DateTime DataNascimento { get; set; }
     [StringLength(80)]
     public string Email { get; set; }

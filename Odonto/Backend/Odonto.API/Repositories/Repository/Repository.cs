@@ -1,4 +1,5 @@
-﻿using Odonto.API.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Odonto.API.Context;
 using Odonto.API.Repositories.Interface;
 using System.Linq.Expressions;
 
@@ -16,7 +17,7 @@ public class Repository<T> : IRepository<T> where T : class
     public IEnumerable<T> BuscarTodos()
     {
         return _context.Set<T>().ToList();
-
+     
     }
     public T BuscarPorId(Expression<Func<T, bool>> predicate)
     {

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Odonto.API.Context;
+using Odonto.API.DTOs.Mappings;
 using Odonto.API.Repositories.Interface;
 using Odonto.API.Repositories.Repository;
 using Odonto.API.Services.Interface;
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IConsultaService, ConsultaService>();
 #endregion Services
 
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAutoMapper(typeof(OdontoDTOMappingProfile));
 
 #endregion Serviços
 

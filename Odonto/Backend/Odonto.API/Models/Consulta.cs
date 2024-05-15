@@ -14,9 +14,6 @@ public class Consulta
     public DateTime DataConsulta { get; set; }
     public int DentistaId { get; set; }
     public int PacienteId { get; set; }
-    
-    [JsonIgnore]
     public Dentista? Dentista { get; set; }
-    [JsonIgnore]
     public Paciente? Paciente { get; set; }
 }

@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Odonto.API.DTOs.Consultas;
 using Odonto.API.Models;
 using Odonto.API.Services.Interface;
 
@@ -10,42 +11,59 @@ namespace Odonto.API.Controllers
     public class ConsultasController : ControllerBase
     {
         IConsultaService _service;
+        IMapper _mapper;
 
-        public ConsultasController(IConsultaService service)
+        public ConsultasController(IConsultaService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
         [HttpGet]
-        public ActionResult<Consulta> BuscarTodasConsultas()
+        public ActionResult<ConsultasDTO> BuscarTodasConsultas()
         {
             var consultas = _service.BuscarTodasConsultas();
-            return Ok(consultas);
+            
+            var consultasDto = _mapper.Map<IEnumerable<ConsultasDTO>>(consultas);
+            
+            return Ok(consultasDto);
         }
         [HttpGet("buscar-consulta-id/{id}")]
-        public ActionResult<Consulta> BuscarConsultaPorId(int id) 
+        public ActionResult<ConsultasDTO> BuscarConsultaPorId(int id)
         {
             var consulta = _service.BuscarConsultaPorId(id);
-            return Ok(consulta);
+
+            var consultaDto = _mapper.Map<ConsultasDTO>(consulta);
+
+            return Ok(consultaDto);
         }
-        
+
         [HttpPost("cadastrar-consulta")]
-        public ActionResult<Consulta> CadastrarConsulta(Consulta consulta) 
+        public ActionResult<ConsultasCadastroDTO> CadastrarConsulta(ConsultasCadastroDTO consultaDto)
         {
+            var consulta = _mapper.Map<Consulta>(consultaDto);
+                        
             _service.CadastrarConsulta(consulta);
+            
             return Ok(consulta);
         }
 
         [HttpPut("atualizar-consulta")]
-        public ActionResult<Consulta> AtualizarConsulta(Consulta consulta)
+        public ActionResult<ConsultasDTO> AtualizarConsulta(ConsultasDTO consultaDto)
         {
+            var consulta = _mapper.Map<Consulta>(consultaDto);
+
             _service.AtualizarConsulta(consulta);
+            
             return Ok(consulta);
         }
-        
+
         [HttpDelete("excluir-consulta")]
-        public ActionResult<Consulta> ExcluirConsulta(Consulta consulta)
+        public ActionResult<ConsultasDTO> ExcluirConsulta(ConsultasDTO consultaDto)
         {
+            var consulta = _mapper.Map<Consulta>(consultaDto);
+
             _service.ExcluirConsulta(consulta);
+            
             return Ok(consulta);
         }
     }

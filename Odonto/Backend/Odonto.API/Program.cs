@@ -8,14 +8,14 @@ using Odonto.API.Services.Interface;
 using Odonto.API.Services.Services;
 using System.Text.Json.Serialization;
 
-#region Variáveis
+#region Variaveis
 
 var builder = WebApplication.CreateBuilder(args);
 string conectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-#endregion Variáveis
+#endregion Variaveis
 
-#region Serviços
+#region Servicos
 
 builder.Services.AddControllers().AddJsonOptions(options =>
         options.JsonSerializerOptions
@@ -45,9 +45,9 @@ builder.Services.AddScoped<IConsultaService, ConsultaService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(OdontoDTOMappingProfile));
 
-#endregion Serviços
+#endregion Serviï¿½os
 
-#region Configuração do Swagger
+#region Configuraï¿½ï¿½o do Swagger
 builder.Services.AddSwaggerGen(
     c =>
     {
@@ -58,12 +58,12 @@ builder.Services.AddSwaggerGen(
             Version = "v1",
             Contact = new OpenApiContact
             {
-                Name = "Fábio Júlio",
+                Name = "Fï¿½bio Jï¿½lio",
                 Email = "fabiojulio.santos@pm.me"
             }
         });
     });
-#endregion Configuração do Swagger
+#endregion Configuraï¿½ï¿½o do Swagger
 
 var app = builder.Build();
 

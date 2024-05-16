@@ -10,8 +10,8 @@ namespace Odonto.API.Controllers
     [ApiController]
     public class ConsultasController : ControllerBase
     {
-        IConsultaService _service;
-        IMapper _mapper;
+        private readonly IConsultaService _service;
+        private readonly IMapper _mapper;
 
         public ConsultasController(IConsultaService service, IMapper mapper)
         {

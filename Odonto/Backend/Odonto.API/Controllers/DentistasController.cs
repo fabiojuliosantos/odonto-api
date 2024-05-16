@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Odonto.API.DTOs.Dentistas;
 using Odonto.API.Models;
 using Odonto.API.Services.Interface;
 
@@ -8,10 +10,12 @@ namespace Odonto.API.Controllers
     [ApiController]
     public class DentistasController : ControllerBase
     {
-        IDentistaService _service;
-        public DentistasController(IDentistaService service)
+        private readonly IDentistaService _service;
+        private readonly IMapper _mapper;
+        public DentistasController(IDentistaService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -29,16 +33,20 @@ namespace Odonto.API.Controllers
         }
         
         [HttpPost("cadastrar-dentista")]
-        public ActionResult<Dentista> CadastrarDentista(Dentista dentista)
+        public ActionResult<DentistasCadastroDTO> CadastrarDentista(DentistasCadastroDTO dentistaDto)
         {
+            var dentista = _mapper.Map<Dentista>(dentistaDto);
             _service.CadastrarDentista(dentista);
             return Ok(dentista);    
         }
 
         [HttpPut("atualizar-dentista")]
-        public ActionResult<Dentista>AtualizarDentista(Dentista dentista)
+        public ActionResult<DentistasDTO>AtualizarDentista(DentistasDTO dentistaDto)
         {
+            var dentista = _mapper.Map<Dentista>(dentistaDto);
+            
             _service.AtualizarDentista(dentista);
+            
             return Ok(dentista);
         }
         [HttpDelete("excluir-dentista")]

@@ -4,8 +4,8 @@ namespace Odonto.API.Services.Interface;
 
 public interface IDentistaService
 {
-    IEnumerable<Dentista> BuscarTodosDentistas();
-    Dentista BuscarPorId(int id);
+    Task<IEnumerable<Dentista>> BuscarTodosDentistasAsync();
+    Task<Dentista> BuscarPorIdAsync(int id);
     Dentista CadastrarDentista(Dentista dentista);
     Dentista AtualizarDentista(Dentista dentista);
     Dentista ExcluirDentista(Dentista dentista);

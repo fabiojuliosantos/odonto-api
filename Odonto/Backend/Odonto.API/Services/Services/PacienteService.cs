@@ -1,34 +1,22 @@
 ﻿using Odonto.API.Models;
+using Odonto.API.Pagination;
 using Odonto.API.Repositories.Interface;
 using Odonto.API.Services.Interface;
+using X.PagedList;
 
 namespace Odonto.API.Services.Services;
 
 public class PacienteService : IPacienteService
 {
-    IPacienteRepository _repository;
+    private readonly IPacienteRepository _repository;
 
     public PacienteService(IPacienteRepository repository)
     {
         _repository = repository;
     }
 
-    #region Buscar
-    public IEnumerable<Paciente> BuscarTodosPacientes()
-    {
-        var pacientes = _repository.BuscarTodos();
-        return pacientes;
-    }
-    public Paciente BuscarPacientePorId(int id)
-    {
-        var paciente = _repository.BuscarPacientePeloIdConsulta(id);
-        if (paciente is null) throw new Exception($"Paciente de id: {id} não foi encontrado!");
-        return paciente;
-    }
-
-    #endregion Buscar
-
     #region Cadastrar
+
     public Paciente CadastrarPaciente(Paciente paciente)
     {
         if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
@@ -59,4 +47,28 @@ public class PacienteService : IPacienteService
     }
 
     #endregion Excluir
+
+    #region Buscar
+
+    public async Task<IEnumerable<Paciente>> BuscarTodosPacientesAsync()
+    {
+        var pacientes = await _repository.BuscarTodosAsync();
+        return pacientes;
+    }
+
+    public async Task<IPagedList<Paciente>> PacientesPaginadosAsync(PacientesParameters param)
+    {
+        var pacientesPaginados = await _repository.PacientesPaginados(param);
+
+        return pacientesPaginados;
+    }
+
+    public async Task<Paciente> BuscarPacientePorIdAsync(int id)
+    {
+        var paciente = await _repository.BuscarPacientePeloIdConsultaAsync(id);
+        if (paciente is null) throw new Exception($"Paciente de id: {id} não foi encontrado!");
+        return paciente;
+    }
+
+    #endregion Buscar
 }

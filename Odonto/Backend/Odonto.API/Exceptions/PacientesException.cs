@@ -1,10 +1,8 @@
-﻿namespace Odonto.API.Exceptions
+﻿namespace Odonto.API.Exceptions;
+
+public class PacientesException : Exception
 {
-    public class PacientesException : Exception
+    public PacientesException(string mensagem) : base(mensagem)
     {
-        public PacientesException(string mensagem): base(mensagem)
-        {
-            
-        }
     }
 }

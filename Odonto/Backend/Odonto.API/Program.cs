@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Odonto.API.Context;
@@ -6,32 +7,30 @@ using Odonto.API.Repositories.Interface;
 using Odonto.API.Repositories.Repository;
 using Odonto.API.Services.Interface;
 using Odonto.API.Services.Services;
-using System.Text.Json.Serialization;
 
 #region Variaveis
 
 var builder = WebApplication.CreateBuilder(args);
-string conectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var conectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 #endregion Variaveis
 
 #region Servicos
 
 builder.Services.AddControllers().AddJsonOptions(options =>
-        options.JsonSerializerOptions
-               .ReferenceHandler = ReferenceHandler.IgnoreCycles);
+    options.JsonSerializerOptions
+        .ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlServer(conectionString);
-});
+builder.Services.AddDbContext<AppDbContext>(options => { options.UseSqlServer(conectionString); });
 
 #region Repositories
+
 builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
 builder.Services.AddScoped<IConsultaRepository, ConsultaRepository>();
 builder.Services.AddScoped<IDentistaRepository, DentistaRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
 #endregion Repositories
 
 #region Services
@@ -45,9 +44,10 @@ builder.Services.AddScoped<IConsultaService, ConsultaService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(OdontoDTOMappingProfile));
 
-#endregion Servi�os
+#endregion Servicos
 
-#region Configura��o do Swagger
+#region Configuracao do Swagger
+
 builder.Services.AddSwaggerGen(
     c =>
     {
@@ -58,12 +58,13 @@ builder.Services.AddSwaggerGen(
             Version = "v1",
             Contact = new OpenApiContact
             {
-                Name = "F�bio J�lio",
+                Name = "Fabio Julio",
                 Email = "fabiojulio.santos@pm.me"
             }
         });
     });
-#endregion Configura��o do Swagger
+
+#endregion Configuracao do Swagger
 
 var app = builder.Build();
 

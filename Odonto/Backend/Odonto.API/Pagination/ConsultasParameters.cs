@@ -1,6 +1,6 @@
 ﻿namespace Odonto.API.Pagination;
 
-public class PacientesParameters
+public class ConsultasParameters
 {
     const int MaxPageSize = 50;
     public int PageNumber { get; set; } = 1;

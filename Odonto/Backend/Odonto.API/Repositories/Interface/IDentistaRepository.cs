@@ -4,5 +4,5 @@ namespace Odonto.API.Repositories.Interface;
 
 public interface IDentistaRepository : IRepository<Dentista>
 {
-    Dentista BuscarDentistaPeloIdConsulta(int id);
+    Task<Dentista> BuscarDentistaPeloIdConsultaAsync(int id);
 }

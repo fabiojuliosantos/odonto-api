@@ -1,39 +1,22 @@
 ﻿using Odonto.API.Models;
+using Odonto.API.Pagination;
 using Odonto.API.Repositories.Interface;
 using Odonto.API.Services.Interface;
+using X.PagedList;
 
 namespace Odonto.API.Services.Services;
 
 public class ConsultaService : IConsultaService
 {
-    IConsultaRepository _repository;
+    private readonly IConsultaRepository _repository;
+
     public ConsultaService(IConsultaRepository repository)
     {
         _repository = repository;
     }
 
-    #region Buscar
-    public IEnumerable<Consulta> BuscarTodasConsultas()
-    {
-        var consultas = _repository.BuscarTodos();
-
-        return consultas;
-    }
-
-    public Consulta BuscarConsultaPorId(int id)
-    {
-        if (id <= 0 || string.IsNullOrEmpty(id.ToString())) throw new Exception("Valor informado para id é inválido!");
-
-        var consulta = _repository.BuscarConsultaComPacienteDentistaPorId(id);
-
-        if (consulta is null) throw new Exception($"Consulta de id: {id} não encontrada!");
-
-        return consulta;
-    }
-
-    #endregion Buscar
-
     #region Cadastrar
+
     public Consulta CadastrarConsulta(Consulta consulta)
     {
         if (consulta is null) throw new Exception("Dados para consulta não foram informados!");
@@ -45,7 +28,8 @@ public class ConsultaService : IConsultaService
 
     #endregion Cadastrar
 
-    #region Atualizar    
+    #region Atualizar
+
     public Consulta AtualizarConsulta(Consulta consulta)
     {
         if (consulta is null) throw new Exception("Dados para consulta não foram informados!");
@@ -54,9 +38,11 @@ public class ConsultaService : IConsultaService
 
         return consulta;
     }
+
     #endregion Atualizar
 
     #region Excluir
+
     public Consulta ExcluirConsulta(Consulta consulta)
     {
         if (consulta is null) throw new Exception("Dados para consulta não foram informados!");
@@ -65,5 +51,32 @@ public class ConsultaService : IConsultaService
 
         return consulta;
     }
+
     #endregion Excluir
+
+    #region Buscar
+
+    public async Task<IEnumerable<Consulta>> BuscarTodasConsultasAsync()
+    {
+        var consultas = await _repository.BuscarTodosAsync();
+        return consultas;
+    }
+
+    public async Task<IPagedList<Consulta>> BuscarConsultasPaginadas(ConsultasParameters param)
+    {
+        return await _repository.BuscarConsultasPaginadas(param);
+    }
+
+    public async Task<Consulta> BuscarConsultaPorIdAsync(int id)
+    {
+        if (id <= 0 || string.IsNullOrEmpty(id.ToString())) throw new Exception("Valor informado para id é inválido!");
+
+        var consulta =  await _repository.BuscarConsultaComPacienteDentistaPorIdAsync(id);
+
+        if (consulta is null) throw new Exception($"Consulta de id: {id} não encontrada!");
+
+        return consulta;
+    }
+
+    #endregion Buscar
 }

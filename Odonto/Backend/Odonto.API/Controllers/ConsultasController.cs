@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Odonto.API.DTOs.Consultas;
@@ -31,6 +32,7 @@ public class ConsultasController : ControllerBase
     #region GET
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<ConsultasDTO>> BuscarTodasConsultas()
     {
         var consultas = await _service.BuscarTodasConsultasAsync();

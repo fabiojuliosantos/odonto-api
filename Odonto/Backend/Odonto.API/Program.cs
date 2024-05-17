@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Odonto.API.Context;
@@ -16,6 +17,9 @@ var conectionString = builder.Configuration.GetConnectionString("DefaultConnecti
 #endregion Variaveis
 
 #region Servicos
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication("Bearer").AddJwtBearer();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions
@@ -66,6 +70,14 @@ builder.Services.AddSwaggerGen(
 
 #endregion Configuracao do Swagger
 
+#region Configuracao Identity
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
+#endregion Configuracao Identity
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -77,9 +89,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

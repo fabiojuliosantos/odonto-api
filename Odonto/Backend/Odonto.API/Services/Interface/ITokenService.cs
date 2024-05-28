@@ -5,11 +5,10 @@ namespace Odonto.API.Services.Interface;
 
 public interface ITokenService
 {
-    JwtSecurityToken GerarAccessToken(IEnumerable<Claim> claims,
+    JwtSecurityToken GenerateAccessToken(IEnumerable<Claim> claims,
         IConfiguration _config);
+    string GenerateRefreshToken();
 
-    string GerarRefreshToken();
-
-    ClaimsPrincipal BuscarPrincipalPorTokenExpirado(string token,
+    ClaimsPrincipal GetPrincipalFromExpiredToken(string token,
         IConfiguration _config);
 }

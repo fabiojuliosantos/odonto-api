@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Odonto.API.DTOs.Pacientes;
@@ -28,7 +29,7 @@ public class PacientesController : ControllerBase
     #endregion CONSTRUTOR
     
     #region GET
-    
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Paciente>>> BuscarTodosPacientes()
     {
@@ -37,7 +38,7 @@ public class PacientesController : ControllerBase
         if (pacientes is null) return NotFound();
 
         return Ok(pacientes);
-    }
+    } 
 
     [HttpGet("buscar-paciente-id/{id}")]
     public async Task<ActionResult<Paciente>> BuscarPacientePorId(int id)

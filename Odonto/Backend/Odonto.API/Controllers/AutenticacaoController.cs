@@ -28,6 +28,74 @@ public class AutenticacaoController : ControllerBase
         _configuration = configuration;
     }
 
+    [HttpPost("CreateRole")]
+    public async Task<IActionResult> CreateRole(string rolename)
+    {
+        var roleExist = await _roleManager.RoleExistsAsync(rolename);
+
+        if (!roleExist)
+        {
+            var roleResult = await _roleManager.CreateAsync(new IdentityRole(rolename));
+
+            if (roleResult.Succeeded)
+            {
+                return StatusCode(StatusCodes.Status200OK,
+                    new Response
+                    {
+                        Status = "Success",
+                        Message = $"Role {rolename} adicionada com sucesso!"
+                    });
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new Response
+                {
+                    Status = "Error",
+                    Message = $"Ocorreu um erro ao adicionar a role: {rolename}"
+                });
+            }
+        }
+
+        return StatusCode(StatusCodes.Status400BadRequest, new Response
+        {
+            Status = "Error",
+            Message = "Role já existente!"
+        });
+    }
+
+    [HttpPost("AddUserToRole")]
+    public async Task<IActionResult> AddUserToRole(string email, string roleName)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user != null)
+        {
+            var result = await _userManager.AddToRoleAsync(user, roleName);
+            if (result.Succeeded)
+            {
+                return StatusCode(StatusCodes.Status200OK, 
+                    new Response
+                    {
+                        Status = "Success",
+                        Message = $"Usuario {user.UserName} adicionado a role {roleName} com sucesso!"
+                    });
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new Response
+                {
+                    Status = "Error",
+                    Message = $"Não foi possível adicionar o usuário {user.UserName} a role {roleName}!"
+                });
+            }
+        }
+
+        return BadRequest(new
+        {
+            error = "Não foi possível encontrar o usuário!"
+        });
+    }
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
@@ -48,9 +116,9 @@ public class AutenticacaoController : ControllerBase
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
-            var token = _tokenService.GerarAccessToken(authClaims, _configuration);
+            var token = _tokenService.GenerateAccessToken(authClaims, _configuration);
 
-            var refreshToken = _tokenService.GerarRefreshToken();
+            var refreshToken = _tokenService.GenerateRefreshToken();
             _ = int.TryParse(_configuration["JWT:RefreshTokenValiditynMinutes"],
                 out int refreshTokenValidityInMinutes);
             await _userManager.UpdateAsync(user);
@@ -81,6 +149,7 @@ public class AutenticacaoController : ControllerBase
                     Message = "Usuário já existe!"
                 });
         }
+
         AppUser user = new()
         {
             Email = model.Email,
@@ -97,10 +166,10 @@ public class AutenticacaoController : ControllerBase
                     Message = "Ocorreu um erro ao cadastrar!"
                 });
         }
-        return Ok(new Response { Status = "Success", Message = "Cadastro realizado com sucesso!" });
 
+        return Ok(new Response { Status = "Success", Message = "Cadastro realizado com sucesso!" });
     }
-    
+
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
     {
@@ -109,32 +178,33 @@ public class AutenticacaoController : ControllerBase
         string? accessToken = tokenModel.AccessToken ?? throw new ArgumentNullException(nameof(tokenModel));
         string? refreshToken = tokenModel.RefreshToken ?? throw new ArgumentNullException(nameof(tokenModel));
 
-        var principal = _tokenService.BuscarPrincipalPorTokenExpirado(accessToken!, _configuration);
+        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken!, _configuration);
 
         if (principal is null) return BadRequest("Access/Refresh Token Inválido!");
 
         string usarname = principal.Identity.Name;
 
         var user = await _userManager.FindByNameAsync(usarname!);
-        
+
         if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
         {
             return BadRequest("Access/Refresh Token Inválido!");
         }
-        var newAccessToken = _tokenService.GerarAccessToken(principal.Claims.ToList(), _configuration);
-        var newRefreshToken = _tokenService.GerarRefreshToken();
-        
+
+        var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims.ToList(), _configuration);
+        var newRefreshToken = _tokenService.GenerateRefreshToken();
+
         user.RefreshToken = newRefreshToken;
 
         await _userManager.UpdateAsync(user);
 
-        return new ObjectResult(new 
+        return new ObjectResult(new
         {
             accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
             refreshToken = newRefreshToken
         });
     }
-    
+
     [Authorize]
     [HttpPost("revoke/{username}")]
     public async Task<IActionResult> Revoke(string username)

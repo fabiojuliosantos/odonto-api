@@ -17,14 +17,27 @@ using Odonto.API.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var conectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-var secretKey = builder.Configuration["JWT:SecretKey"] ?? 
+var secretKey = builder.Configuration["Jwt:SecretKey"] ?? 
                 throw new ArgumentException("Chave secreta inválida!");
 
 #endregion Variaveis
 
 #region Servicos
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Administrador"));
+    options.AddPolicy("Dentistas", policy => policy.RequireRole("Dentista"));
+    options.AddPolicy("Recepcao", policy => policy.RequireRole("Recepcao"));
+});
+
+#region Configuracao Identity
+
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+#endregion Configuracao Identity
 
 #region Configuracao JWT
 builder.Services.AddAuthentication(options =>
@@ -44,16 +57,17 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero,
         ValidAudience = builder.Configuration["JWT:ValidAudience"],
         ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(secretKey))
     };
 });
+
 #endregion Configuracao JWT
 
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions
         .ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options => { options.UseSqlServer(conectionString); });
 
 #region Repositories
@@ -95,17 +109,10 @@ builder.Services.AddSwaggerGen(
                 Email = "fabiojulio.santos@pm.me"
             }
         });
+        
     });
 
 #endregion Configuracao do Swagger
-
-#region Configuracao Identity
-
-builder.Services.AddIdentity<AppUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
-
-#endregion Configuracao Identity
 
 var app = builder.Build();
 
@@ -113,11 +120,14 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication(); 
 app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();

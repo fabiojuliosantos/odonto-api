@@ -31,8 +31,7 @@ public class ConsultasController : ControllerBase
     
     #region GET
 
-    [HttpGet]
-    [Authorize]
+    [HttpGet("buscar-consultas")]
     public async Task<ActionResult<ConsultasDTO>> BuscarTodasConsultas()
     {
         var consultas = await _service.BuscarTodasConsultasAsync();
@@ -40,9 +39,11 @@ public class ConsultasController : ControllerBase
         var consultasDto = _mapper.Map<IEnumerable<ConsultasDTO>>(consultas);
 
         return Ok(consultasDto);
-    }
-
-    [HttpGet("buscar-consulta-id/{id}")]
+    }   
+    
+    [Route("buscar-consulta-id/{id}")]
+    [HttpGet]
+    [Authorize]
     public async Task<ActionResult<ConsultasDTO>> BuscarConsultaPorId(int id)
     {
         var consulta = await _service.BuscarConsultaPorIdAsync(id);

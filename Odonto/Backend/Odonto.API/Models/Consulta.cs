@@ -15,6 +15,8 @@ public class Consulta
 
     public int DentistaId { get; set; }
     public int PacienteId { get; set; }
+    //public int EspecialidadeId { get; set; }
     public Dentista? Dentista { get; set; }
     public Paciente? Paciente { get; set; }
+    //public Especialidade? Especialidade { get; set; }
 }

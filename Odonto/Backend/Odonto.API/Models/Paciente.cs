@@ -20,6 +20,9 @@ public class Paciente
     [StringLength(80)] public string Email { get; set; }
 
     [StringLength(11)] public string Telefone { get; set; }
-
+    [StringLength(8)]public string Cep { get; set; }
+    [StringLength(110)]public string Logradouro { get; set; }
+    [StringLength(110)]public string Bairro { get; set; }
+    public int NumeroCasa { get; set; }
     public ICollection<Consulta>? Consultas { get; set; }
 }

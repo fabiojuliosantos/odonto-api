@@ -31,4 +31,8 @@
         <Folder Include="Migrations\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Models\Especialidade.cs" />
+    </ItemGroup>
+
 </Project>

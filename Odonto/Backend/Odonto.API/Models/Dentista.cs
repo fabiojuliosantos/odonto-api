@@ -17,6 +17,8 @@ public class Dentista
     [StringLength(80)] public string Email { get; set; }
 
     [StringLength(11)] public string Telefone { get; set; }
+    //public int EspecialidadeId { get; set; }
 
     public ICollection<Consulta>? Consultas { get; set; }
+    //public Especialidade? Especialidade { get; set; }
 }

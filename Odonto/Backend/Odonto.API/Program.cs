@@ -24,13 +24,6 @@ var secretKey = builder.Configuration["Jwt:SecretKey"] ??
 
 #region Servicos
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("Admin", policy => policy.RequireRole("Administrador"));
-    options.AddPolicy("Dentistas", policy => policy.RequireRole("Dentista"));
-    options.AddPolicy("Recepcao", policy => policy.RequireRole("Recepcao"));
-});
-
 #region Configuracao Identity
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
@@ -64,11 +57,23 @@ builder.Services.AddAuthentication(options =>
 
 #endregion Configuracao JWT
 
+#region Configuracao Roles
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Administrador"));
+    options.AddPolicy("Dentistas", policy => policy.RequireRole("Dentista"));
+    options.AddPolicy("Recepcao", policy => policy.RequireRole("Recepcao"));
+});
+
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions
         .ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddDbContext<AppDbContext>(options => { options.UseSqlServer(conectionString); });
+
+#endregion Configuracao Roles
+
 
 #region Repositories
 

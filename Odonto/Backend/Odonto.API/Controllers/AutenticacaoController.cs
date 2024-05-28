@@ -24,7 +24,7 @@ public class AutenticacaoController : ControllerBase
     {
         _tokenService = tokenService;
         _userManager = userManager;
-        _roleManager = roleManager;
+        _roleManager = roleManager; 
         _configuration = configuration;
     }
 
@@ -129,7 +129,7 @@ public class AutenticacaoController : ControllerBase
                 RefreshToken = refreshToken,
                 Expiration = token.ValidTo
             });
-            return Unauthorized();
+            return Unauthorized("Usuário não autorizado!");
         }
 
         return Ok();

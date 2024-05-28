@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Odonto.API.AuthenticationFilter;
 using Odonto.API.DTOs.Dentistas;
 using Odonto.API.Models;
 using Odonto.API.Services.Interface;
@@ -27,6 +29,7 @@ public class DentistasController : ControllerBase
     }
 
     [HttpGet("buscar-dentista-id/{id}")]
+    [Authorize]
     public async Task<ActionResult<Dentista>> BuscarDentistaPorId(int id)
     {
         var dentista = await _service.BuscarPorIdAsync(id);
@@ -34,14 +37,24 @@ public class DentistasController : ControllerBase
     }
 
     [HttpPost("cadastrar-dentista")]
+    [Authorize(Policy = "Admin")]
+    [VerifyUserHasPolicy("Admin")]
     public ActionResult<DentistasCadastroDTO> CadastrarDentista(DentistasCadastroDTO dentistaDto)
     {
-        var dentista = _mapper.Map<Dentista>(dentistaDto);
-        _service.CadastrarDentista(dentista);
-        return Ok(dentista);
+        try
+        {
+            var dentista = _mapper.Map<Dentista>(dentistaDto);
+            _service.CadastrarDentista(dentista);
+            return Ok(dentista);
+        }
+        catch (Exception)
+        {
+            throw new Exception();
+        }
     }
 
     [HttpPut("atualizar-dentista")]
+    [Authorize(Policy = "Admin")]
     public ActionResult<DentistasDTO> AtualizarDentista(DentistasDTO dentistaDto)
     {
         var dentista = _mapper.Map<Dentista>(dentistaDto);
@@ -50,8 +63,9 @@ public class DentistasController : ControllerBase
 
         return Ok(dentista);
     }
-
+    
     [HttpDelete("excluir-dentista")]
+    [Authorize(Policy = "Admin")]
     public ActionResult<Dentista> ExcluirDentista(Dentista dentista)
     {
         _service.ExcluirDentista(dentista);

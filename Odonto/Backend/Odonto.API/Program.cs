@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Odonto.API.Context;
 using Odonto.API.DTOs.Mappings;
 using Odonto.API.Models;
@@ -12,6 +11,8 @@ using Odonto.API.Repositories.Interface;
 using Odonto.API.Repositories.Repository;
 using Odonto.API.Services.Interface;
 using Odonto.API.Services.Services;
+using Odonto.Infra.Configuration;
+using Odonto.IoC;
 
 #region Variaveis
 
@@ -59,6 +60,8 @@ builder.Services.AddAuthentication(options =>
 
 #region Configuracao Roles
 
+builder.Services.ResolveDependecies();
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Admin", policy => policy.RequireRole("Administrador"));
@@ -100,22 +103,7 @@ builder.Services.AddAutoMapper(typeof(OdontoDTOMappingProfile));
 
 #region Configuracao do Swagger
 
-builder.Services.AddSwaggerGen(
-    c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo
-        {
-            Title = "API do Centro de Odontologia Especializada",
-            Description = "API de controle de pacientes, dentistas e consultas",
-            Version = "v1",
-            Contact = new OpenApiContact
-            {
-                Name = "Fabio Julio",
-                Email = "fabiojulio.santos@pm.me"
-            }
-        });
-        
-    });
+builder.Services.AddSwaggerConfig();
 
 #endregion Configuracao do Swagger
 

@@ -23,7 +23,6 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.1" />
         <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
     </ItemGroup>
 
@@ -33,6 +32,10 @@
 
     <ItemGroup>
       <Compile Remove="Models\Especialidade.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Odonto.IoC\Odonto.IoC.csproj" />
     </ItemGroup>
 
 </Project>

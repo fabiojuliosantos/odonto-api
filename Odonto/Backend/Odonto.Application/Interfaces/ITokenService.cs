@@ -1,7 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Odonto.API.Services.Interface;
+namespace Odonto.Application.Interfaces;
 
 public interface ITokenService
 {

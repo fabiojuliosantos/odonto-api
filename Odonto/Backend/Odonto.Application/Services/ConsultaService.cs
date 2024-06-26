@@ -1,10 +1,10 @@
-﻿using Odonto.API.Models;
-using Odonto.API.Pagination;
-using Odonto.API.Repositories.Interface;
-using Odonto.API.Services.Interface;
+﻿using Odonto.Application.Interfaces;
+using Odonto.Domain.Entities;
+using Odonto.Domain.Pagination;
+using Odonto.Infra.Interfaces;
 using X.PagedList;
 
-namespace Odonto.API.Services.Services;
+namespace Odonto.Application.Services;
 
 public class ConsultaService : IConsultaService
 {
@@ -71,7 +71,7 @@ public class ConsultaService : IConsultaService
     {
         if (id <= 0 || string.IsNullOrEmpty(id.ToString())) throw new Exception("Valor informado para id é inválido!");
 
-        var consulta =  await _repository.BuscarConsultaComPacienteDentistaPorIdAsync(id);
+        var consulta = await _repository.BuscarConsultaComPacienteDentistaPorIdAsync(id);
 
         if (consulta is null) throw new Exception($"Consulta de id: {id} não encontrada!");
 

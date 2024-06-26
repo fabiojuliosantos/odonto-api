@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Odonto.API.DTOs.Consultas;
-using Odonto.API.Models;
 using Odonto.API.Pagination;
-using Odonto.API.Services.Interface;
+using Odonto.Application.Interfaces;
+using Odonto.Domain.Entities;
 
 namespace Odonto.API.Controllers;
 
@@ -14,21 +14,21 @@ namespace Odonto.API.Controllers;
 public class ConsultasController : ControllerBase
 {
     #region MEMBROS
-    
+
     private readonly IMapper _mapper;
     private readonly IConsultaService _service;
-    
+
     #endregion MEMBROS
-    
+
     #region CONSTRUTOR
     public ConsultasController(IConsultaService service, IMapper mapper)
     {
         _service = service;
         _mapper = mapper;
     }
-    
+
     #endregion CONSTRUTOR
-    
+
     #region GET
 
     [HttpGet("buscar-consultas")]
@@ -39,8 +39,8 @@ public class ConsultasController : ControllerBase
         var consultasDto = _mapper.Map<IEnumerable<ConsultasDTO>>(consultas);
 
         return Ok(consultasDto);
-    }   
-    
+    }
+
     [Route("buscar-consulta-id/{id}")]
     [HttpGet]
     [Authorize]
@@ -53,24 +53,24 @@ public class ConsultasController : ControllerBase
         return Ok(consultaDto);
     }
 
-    [HttpGet("buscar-consultas-paginadas")]
-    public async Task<ActionResult<Consulta>> BuscarConsultasPaginadas([FromQuery] ConsultasParameters param)
-    {
-        var consultasPaginadas = await _service.BuscarConsultasPaginadas(param);
-        var metadata =
-            new
-            {
-                consultasPaginadas.PageCount,
-                consultasPaginadas.PageSize,
-                consultasPaginadas.Count,
-                consultasPaginadas.TotalItemCount,
-                consultasPaginadas.HasNextPage,
-                consultasPaginadas.HasPreviousPage
-            };
-        Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+    //[HttpGet("buscar-consultas-paginadas")]
+    //public async Task<ActionResult<Consulta>> BuscarConsultasPaginadas([FromQuery] ConsultasParameters param)
+    //{
+    //    var consultasPaginadas = await _service.BuscarConsultasPaginadas(param);
+    //    var metadata =
+    //        new
+    //        {
+    //            consultasPaginadas.PageCount,
+    //            consultasPaginadas.PageSize,
+    //            consultasPaginadas.Count,
+    //            consultasPaginadas.TotalItemCount,
+    //            consultasPaginadas.HasNextPage,
+    //            consultasPaginadas.HasPreviousPage
+    //        };
+    //    Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
 
-        return Ok(consultasPaginadas);
-    }
+    //    return Ok(consultasPaginadas);
+    //}
 
     #endregion GET
 

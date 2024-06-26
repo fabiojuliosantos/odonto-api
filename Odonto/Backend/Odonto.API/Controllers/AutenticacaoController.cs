@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Odonto.API.DTOs.Autenticacao;
-using Odonto.API.Models;
-using Odonto.API.Services.Interface;
+using Odonto.Application.Interfaces;
+using Odonto.Infra.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;

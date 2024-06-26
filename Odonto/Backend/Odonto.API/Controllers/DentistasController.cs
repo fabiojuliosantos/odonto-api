@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Odonto.API.AuthenticationFilter;
 using Odonto.API.DTOs.Dentistas;
-using Odonto.API.Models;
-using Odonto.API.Services.Interface;
+using Odonto.Application.Interfaces;
+using Odonto.Domain.Entities;
 
 namespace Odonto.API.Controllers;
 
@@ -63,7 +63,7 @@ public class DentistasController : ControllerBase
 
         return Ok(dentista);
     }
-    
+
     [HttpDelete("excluir-dentista")]
     [Authorize(Policy = "Admin")]
     public ActionResult<Dentista> ExcluirDentista(Dentista dentista)

@@ -1,6 +1,12 @@
-﻿namespace Odonto.Infra.Interfaces;
+﻿using System.Linq.Expressions;
 
-public interface IRepository
+namespace Odonto.Infra.Interfaces;
+
+public interface IRepository<T>
 {
-    
+    Task<IEnumerable<T>> BuscarTodosAsync();
+    Task<T> BuscarPorIdAsync(Expression<Func<T, bool>> predicate);
+    T Cadastrar(T entity);
+    T Atualizar(T entity);
+    T Deletar(T entity);
 }

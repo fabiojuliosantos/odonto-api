@@ -1,6 +1,11 @@
-﻿namespace Odonto.Infra.Interfaces;
+﻿using Odonto.Domain.Entities;
+using Odonto.Domain.Pagination;
+using X.PagedList;
 
-public interface IConsultaRepository
+namespace Odonto.Infra.Interfaces;
+
+public interface IConsultaRepository : IRepository<Consulta>
 {
-    
+    Task<Consulta> BuscarConsultaComPacienteDentistaPorIdAsync(int id);
+    Task<IPagedList<Consulta>> BuscarConsultasPaginadas(ConsultasParameters param);
 }

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Odonto.API.DTOs.Pacientes;
-using Odonto.API.Models;
 using Odonto.API.Pagination;
-using Odonto.API.Services.Interface;
+using Odonto.Application.Interfaces;
+using Odonto.Domain.Entities;
 
 namespace Odonto.API.Controllers;
 
@@ -14,12 +14,12 @@ namespace Odonto.API.Controllers;
 public class PacientesController : ControllerBase
 {
     #region MEMBROS    
-    
+
     private readonly IMapper _mapper;
     private readonly IPacienteService _service;
-    
+
     #endregion MEMBROS
-    
+
     #region CONSTRUTOR
     public PacientesController(IMapper mapper, IPacienteService service)
     {
@@ -27,7 +27,7 @@ public class PacientesController : ControllerBase
         _mapper = mapper;
     }
     #endregion CONSTRUTOR
-    
+
     #region GET
     [Authorize]
     [HttpGet]
@@ -38,7 +38,7 @@ public class PacientesController : ControllerBase
         if (pacientes is null) return NotFound();
 
         return Ok(pacientes);
-    } 
+    }
 
     [HttpGet("buscar-paciente-id/{id}")]
     public async Task<ActionResult<Paciente>> BuscarPacientePorId(int id)
@@ -50,28 +50,28 @@ public class PacientesController : ControllerBase
         return Ok(paciente);
     }
 
-    [HttpGet("pacientes-paginados")]
-    public async Task<ActionResult<Paciente>> BuscarPacientesPaginados([FromQuery] PacientesParameters param)
-    {
-        var pacientesPaginados = await _service.PacientesPaginadosAsync(param);
+    //[HttpGet("pacientes-paginados")]
+    //public async Task<ActionResult<Paciente>> BuscarPacientesPaginados([FromQuery] PacientesParameters param)
+    //{
+    //    var pacientesPaginados = await _service.PacientesPaginadosAsync(param);
 
-        var metadata = new
-        {
-            pacientesPaginados.PageCount,
-            pacientesPaginados.PageSize,
-            pacientesPaginados.PageNumber,
-            pacientesPaginados.TotalItemCount,
-            pacientesPaginados.HasNextPage,
-            pacientesPaginados.HasPreviousPage
-        };
+    //    var metadata = new
+    //    {
+    //        pacientesPaginados.PageCount,
+    //        pacientesPaginados.PageSize,
+    //        pacientesPaginados.PageNumber,
+    //        pacientesPaginados.TotalItemCount,
+    //        pacientesPaginados.HasNextPage,
+    //        pacientesPaginados.HasPreviousPage
+    //    };
 
-        Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+    //    Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
 
-        return Ok(pacientesPaginados);
-    }
-    
+    //    return Ok(pacientesPaginados);
+    //}
+
     #endregion GET
-    
+
     #region POST
     [HttpPost("cadastrar-paciente")]
     public ActionResult<PacientesCadastroDTO> CadastrarPaciente(PacientesCadastroDTO pacienteDto)
@@ -83,9 +83,9 @@ public class PacientesController : ControllerBase
         return Ok(paciente);
     }
     #endregion POST
-    
+
     #region PUT
-    
+
     [HttpPut("atualizar-paciente")]
     public ActionResult<PacientesDTO> AtualizarPaciente(PacientesDTO pacienteDto)
     {
@@ -96,9 +96,9 @@ public class PacientesController : ControllerBase
         return Ok(paciente);
     }
     #endregion PUT
-    
+
     #region DELETE
-    
+
     [HttpDelete("excluir-paciente/")]
     public ActionResult<PacientesDTO> ExcluirPaciente(PacientesDTO pacienteDto)
     {
@@ -108,6 +108,6 @@ public class PacientesController : ControllerBase
 
         return Ok($"Paciente {paciente.Nome}, excluído com sucesso!");
     }
-    
+
     #endregion DELETE
 }

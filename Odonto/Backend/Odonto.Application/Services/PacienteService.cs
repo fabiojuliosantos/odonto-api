@@ -1,10 +1,10 @@
-﻿using Odonto.API.Models;
-using Odonto.API.Pagination;
-using Odonto.API.Repositories.Interface;
-using Odonto.API.Services.Interface;
+﻿using Odonto.Application.Interfaces;
+using Odonto.Domain.Entities;
+using Odonto.Domain.Pagination;
+using Odonto.Infra.Interfaces;
 using X.PagedList;
 
-namespace Odonto.API.Services.Services;
+namespace Odonto.Application.Services;
 
 public class PacienteService : IPacienteService
 {
@@ -14,7 +14,6 @@ public class PacienteService : IPacienteService
     {
         _repository = repository;
     }
-
     #region Cadastrar
 
     public Paciente CadastrarPaciente(Paciente paciente)

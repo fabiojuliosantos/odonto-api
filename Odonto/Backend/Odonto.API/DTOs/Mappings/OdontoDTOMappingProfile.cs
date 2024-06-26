@@ -2,7 +2,7 @@
 using Odonto.API.DTOs.Consultas;
 using Odonto.API.DTOs.Dentistas;
 using Odonto.API.DTOs.Pacientes;
-using Odonto.API.Models;
+using Odonto.Domain.Entities;
 
 namespace Odonto.API.DTOs.Mappings;
 

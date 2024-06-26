@@ -1,8 +1,8 @@
-﻿using Odonto.API.Models;
-using Odonto.API.Pagination;
+﻿using Odonto.Domain.Entities;
+using Odonto.Domain.Pagination;
 using X.PagedList;
 
-namespace Odonto.API.Services.Interface;
+namespace Odonto.Application.Interfaces;
 
 public interface IConsultaService
 {

@@ -1,6 +1,8 @@
-﻿namespace Odonto.Infra.Interfaces;
+﻿using Odonto.Domain.Entities;
 
-public interface IDentistaRepository
+namespace Odonto.Infra.Interfaces;
+
+public interface IDentistaRepository : IRepository<Dentista>
 {
-    
+    Task<Dentista> BuscarDentistaPeloIdConsultaAsync(int id);
 }

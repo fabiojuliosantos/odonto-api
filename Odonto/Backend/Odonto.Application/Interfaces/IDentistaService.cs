@@ -1,6 +1,6 @@
-﻿using Odonto.API.Models;
+﻿using Odonto.Domain.Entities;
 
-namespace Odonto.API.Services.Interface;
+namespace Odonto.Application.Interfaces;
 
 public interface IDentistaService
 {
@@ -9,4 +9,5 @@ public interface IDentistaService
     Dentista CadastrarDentista(Dentista dentista);
     Dentista AtualizarDentista(Dentista dentista);
     Dentista ExcluirDentista(Dentista dentista);
+
 }

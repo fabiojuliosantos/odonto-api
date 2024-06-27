@@ -12,6 +12,8 @@ namespace Odonto.API.Controllers;
 
 [Route("api/[Controller]")]
 [ApiController]
+[Produces("application/json")]
+
 public class AutenticacaoController : ControllerBase
 {
     private readonly ITokenService _tokenService;
@@ -19,15 +21,22 @@ public class AutenticacaoController : ControllerBase
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
 
-    public AutenticacaoController(ITokenService tokenService, UserManager<AppUser> userManager,
-        RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+    public AutenticacaoController(ITokenService tokenService,
+                                  UserManager<AppUser> userManager,
+                                  RoleManager<IdentityRole> roleManager,
+                                  IConfiguration configuration)
     {
         _tokenService = tokenService;
         _userManager = userManager;
-        _roleManager = roleManager; 
+        _roleManager = roleManager;
         _configuration = configuration;
     }
-
+    
+    /// <summary>
+    /// Cadastra uma nova role para permissão de acesso dos usuários
+    /// </summary>
+    /// <param name="rolename">Nome da role que será cadastrada</param>
+    /// <returns>Retorna uma mensagem de sucesso com a role cadastrada</returns>
     [HttpPost("CreateRole")]
     public async Task<IActionResult> CreateRole(string rolename)
     {
@@ -63,6 +72,12 @@ public class AutenticacaoController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Atribui uma role ao usuário informado pelo e-mail
+    /// </summary>
+    /// <param name="email">E-mail do usuário que receberá a role</param>
+    /// <param name="roleName">Nome da role que será atribuída ao usuário</param>
+    /// <returns>retorna uma mensagem de sucesso com o nome do usuário e a role atribuída</returns>
     [HttpPost("AddUserToRole")]
     public async Task<IActionResult> AddUserToRole(string email, string roleName)
     {
@@ -73,7 +88,7 @@ public class AutenticacaoController : ControllerBase
             var result = await _userManager.AddToRoleAsync(user, roleName);
             if (result.Succeeded)
             {
-                return StatusCode(StatusCodes.Status200OK, 
+                return StatusCode(StatusCodes.Status200OK,
                     new Response
                     {
                         Status = "Success",
@@ -95,7 +110,11 @@ public class AutenticacaoController : ControllerBase
             error = "Não foi possível encontrar o usuário!"
         });
     }
-
+    /// <summary>
+    /// Realiza o login do usuário cadastrado
+    /// </summary>
+    /// <param name="model">Objeto com as informações do usuário para login</param>
+    /// <returns>Retorna o Token JWT do usuário, Tempo de validade do token e Refresh Token</returns>
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
@@ -134,7 +153,11 @@ public class AutenticacaoController : ControllerBase
 
         return Ok();
     }
-
+    /// <summary>
+    /// Registra um novo usuário
+    /// </summary>
+    /// <param name="model">Objeto com as informações do usuário para registro</param>
+    /// <returns>Mensagem de sucesso, usuário cadastrado com sucesso!</returns>
     [HttpPost("Registrar")]
     public async Task<IActionResult> Registrar([FromBody] RegisterModel model)
     {
@@ -169,7 +192,12 @@ public class AutenticacaoController : ControllerBase
 
         return Ok(new Response { Status = "Success", Message = "Cadastro realizado com sucesso!" });
     }
-
+    /// <summary>
+    /// Gera um novo refresh token para o usuário
+    /// </summary>
+    /// <param name="tokenModel">Objeto com as informações do token para gerar novo refresh</param>
+    /// <returns>Retorna um novo Refresh Token</returns>
+    /// <exception cref="ArgumentNullException"></exception>
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
     {
@@ -205,6 +233,11 @@ public class AutenticacaoController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Revoga o token do usuário [Endpoint Protegido]
+    /// </summary>
+    /// <param name="username">Nome do usuário que terá o token revogado</param>
+    /// <returns>Retorna código 200 sem conteúdo</returns>
     [Authorize]
     [HttpPost("revoke/{username}")]
     public async Task<IActionResult> Revoke(string username)

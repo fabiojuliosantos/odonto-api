@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Odonto.API.DTOs.Consultas;
-using Odonto.API.Pagination;
 using Odonto.Application.Interfaces;
 using Odonto.Domain.Entities;
 
@@ -11,6 +9,8 @@ namespace Odonto.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Produces("application/json")]
+
 public class ConsultasController : ControllerBase
 {
     #region MEMBROS
@@ -21,7 +21,8 @@ public class ConsultasController : ControllerBase
     #endregion MEMBROS
 
     #region CONSTRUTOR
-    public ConsultasController(IConsultaService service, IMapper mapper)
+    public ConsultasController(IConsultaService service, 
+                               IMapper mapper)
     {
         _service = service;
         _mapper = mapper;
@@ -30,7 +31,10 @@ public class ConsultasController : ControllerBase
     #endregion CONSTRUTOR
 
     #region GET
-
+    /// <summary>
+    /// Busca todas consultas cadastradas
+    /// </summary>
+    /// <returns>Retorna todos os objetos das consultas cadastradas</returns>
     [HttpGet("buscar-consultas")]
     public async Task<ActionResult<ConsultasDTO>> BuscarTodasConsultas()
     {
@@ -41,9 +45,13 @@ public class ConsultasController : ControllerBase
         return Ok(consultasDto);
     }
 
-    [Route("buscar-consulta-id/{id}")]
-    [HttpGet]
-    [Authorize]
+    /// <summary>
+    /// Busca uma consulta específica pelo ID
+    /// </summary>
+    /// <param name="id">ID da consulta que será buscada</param>
+    /// <returns>Retorna o objeto da consulta</returns>
+    [HttpGet("buscar-consulta-id/{id}")]
+
     public async Task<ActionResult<ConsultasDTO>> BuscarConsultaPorId(int id)
     {
         var consulta = await _service.BuscarConsultaPorIdAsync(id);
@@ -53,30 +61,16 @@ public class ConsultasController : ControllerBase
         return Ok(consultaDto);
     }
 
-    //[HttpGet("buscar-consultas-paginadas")]
-    //public async Task<ActionResult<Consulta>> BuscarConsultasPaginadas([FromQuery] ConsultasParameters param)
-    //{
-    //    var consultasPaginadas = await _service.BuscarConsultasPaginadas(param);
-    //    var metadata =
-    //        new
-    //        {
-    //            consultasPaginadas.PageCount,
-    //            consultasPaginadas.PageSize,
-    //            consultasPaginadas.Count,
-    //            consultasPaginadas.TotalItemCount,
-    //            consultasPaginadas.HasNextPage,
-    //            consultasPaginadas.HasPreviousPage
-    //        };
-    //    Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
-
-    //    return Ok(consultasPaginadas);
-    //}
-
     #endregion GET
 
     #region POST
-
+    /// <summary>
+    /// Cadastra uma nova consulta [Endpoint Protegido]
+    /// </summary>
+    /// <param name="consultaDto">Objeto da consulta que será cadastrada</param>
+    /// <returns>Retorna o objeto da consulta cadastrada</returns>
     [HttpPost("cadastrar-consulta")]
+    [Authorize(Policy = "Admin")]
     public ActionResult<ConsultasCadastroDTO> CadastrarConsulta(ConsultasCadastroDTO consultaDto)
     {
         var consulta = _mapper.Map<Consulta>(consultaDto);
@@ -89,8 +83,14 @@ public class ConsultasController : ControllerBase
     #endregion POST
 
     #region PUT
-
+    /// <summary>
+    /// Atualiza uma consulta específica [Endpoint Protegido]
+    /// </summary>
+    /// <param name="consultaDto">Objeto da consulta que será atualizada</param>
+    /// <returns>Retorna o objeto da consulta atualizada</returns>
     [HttpPut("atualizar-consulta")]
+    [Authorize(Policy = "Admin")]
+
     public ActionResult<ConsultasDTO> AtualizarConsulta(ConsultasDTO consultaDto)
     {
         var consulta = _mapper.Map<Consulta>(consultaDto);
@@ -103,8 +103,14 @@ public class ConsultasController : ControllerBase
     #endregion PUT
 
     #region DELETE
-
+    /// <summary>
+    /// Deleta uma consulta específica [Endpoint Protegido]
+    /// </summary>
+    /// <param name="consultaDto">Objeto da consulta que será Deletada</param>
+    /// <returns>Retorna o objeto da consulta Deletada</returns>
     [HttpDelete("excluir-consulta")]
+    [Authorize(Policy = "Admin")]
+
     public ActionResult<ConsultasDTO> ExcluirConsulta(ConsultasDTO consultaDto)
     {
         var consulta = _mapper.Map<Consulta>(consultaDto);

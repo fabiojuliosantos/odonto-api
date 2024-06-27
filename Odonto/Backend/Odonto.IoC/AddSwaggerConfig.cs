@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace Odonto.IoC.Configuration;
 
@@ -45,6 +46,8 @@ public static class SwaggerConfig
                     new string[]{}
                 }
             });
+            var xmlFileName = $"Odonto.API.xml";
+            c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
         });
         return services;
     }

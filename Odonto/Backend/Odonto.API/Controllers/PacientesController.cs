@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Odonto.API.DTOs.Pacientes;
-using Odonto.API.Pagination;
 using Odonto.Application.Interfaces;
 using Odonto.Domain.Entities;
 
@@ -11,6 +9,9 @@ namespace Odonto.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Produces("application/json")]
+
+
 public class PacientesController : ControllerBase
 {
     #region MEMBROS    
@@ -21,7 +22,8 @@ public class PacientesController : ControllerBase
     #endregion MEMBROS
 
     #region CONSTRUTOR
-    public PacientesController(IMapper mapper, IPacienteService service)
+    public PacientesController(IMapper mapper, 
+                               IPacienteService service)
     {
         _service = service;
         _mapper = mapper;
@@ -29,7 +31,10 @@ public class PacientesController : ControllerBase
     #endregion CONSTRUTOR
 
     #region GET
-    [Authorize]
+    /// <summary>
+    /// Busca todos Pacientes
+    /// </summary>
+    /// <returns>Retorna um array com todos os objetos de clientes.</returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Paciente>>> BuscarTodosPacientes()
     {
@@ -40,6 +45,11 @@ public class PacientesController : ControllerBase
         return Ok(pacientes);
     }
 
+    /// <summary>
+    /// Busca o paciente específico pelo ID
+    /// </summary>
+    /// <param name="id">ID do paciente que irá buscar</param>
+    /// <returns></returns>
     [HttpGet("buscar-paciente-id/{id}")]
     public async Task<ActionResult<Paciente>> BuscarPacientePorId(int id)
     {
@@ -50,29 +60,16 @@ public class PacientesController : ControllerBase
         return Ok(paciente);
     }
 
-    //[HttpGet("pacientes-paginados")]
-    //public async Task<ActionResult<Paciente>> BuscarPacientesPaginados([FromQuery] PacientesParameters param)
-    //{
-    //    var pacientesPaginados = await _service.PacientesPaginadosAsync(param);
-
-    //    var metadata = new
-    //    {
-    //        pacientesPaginados.PageCount,
-    //        pacientesPaginados.PageSize,
-    //        pacientesPaginados.PageNumber,
-    //        pacientesPaginados.TotalItemCount,
-    //        pacientesPaginados.HasNextPage,
-    //        pacientesPaginados.HasPreviousPage
-    //    };
-
-    //    Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
-
-    //    return Ok(pacientesPaginados);
-    //}
-
     #endregion GET
 
     #region POST
+
+    /// <summary>
+    /// Cadastra um novo paciente [Endpoint Protegido]
+    /// </summary>
+    /// <param name="pacienteDto">Objeto de Paciente</param>
+    /// <returns>Retorna o objeto do paciente cadastrado</returns>
+    [Authorize]
     [HttpPost("cadastrar-paciente")]
     public ActionResult<PacientesCadastroDTO> CadastrarPaciente(PacientesCadastroDTO pacienteDto)
     {
@@ -82,10 +79,17 @@ public class PacientesController : ControllerBase
 
         return Ok(paciente);
     }
+
     #endregion POST
 
     #region PUT
 
+    /// <summary>
+    /// Atualiza os dados cadastrais de um paciente [Endpoint Protegido]
+    /// </summary>
+    /// <param name="pacienteDto">Objeto do Paciente</param>
+    /// <returns>Retorna o objeto do paciente</returns>
+    [Authorize]
     [HttpPut("atualizar-paciente")]
     public ActionResult<PacientesDTO> AtualizarPaciente(PacientesDTO pacienteDto)
     {
@@ -99,6 +103,12 @@ public class PacientesController : ControllerBase
 
     #region DELETE
 
+    /// <summary>
+    /// Deleta o paciente cadastrado [Endpoint Protegido]
+    /// </summary>
+    /// <param name="pacienteDto">Objeto do Paciente</param>
+    /// <returns>Retorna o objeto do paciente</returns>
+    [Authorize]
     [HttpDelete("excluir-paciente/")]
     public ActionResult<PacientesDTO> ExcluirPaciente(PacientesDTO pacienteDto)
     {

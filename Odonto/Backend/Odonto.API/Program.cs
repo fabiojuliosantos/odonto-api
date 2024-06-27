@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Odonto.API.DTOs.Mappings;
-using Odonto.Infra.Configuration;
 using Odonto.Infra.Context;
 using Odonto.Infra.Identity;
 using Odonto.IoC;
+using Odonto.IoC.Configuration;
 using System.Text;
 using System.Text.Json.Serialization;
 

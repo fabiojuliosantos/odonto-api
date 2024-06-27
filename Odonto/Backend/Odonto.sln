@@ -7,17 +7,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odonto.API", "Odonto.API\Od
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odonto.Infra", "Odonto.Infra\Odonto.Infra.csproj", "{B6E9D9C4-AA5F-416D-872B-AC8D03788587}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odonto.Domain", "Odonto.Domain\Odonto.Domain.csproj", "{15B7D023-EC2F-4F66-B0DC-19D231E7BA5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odonto.Domain", "Odonto.Domain\Odonto.Domain.csproj", "{15B7D023-EC2F-4F66-B0DC-19D231E7BA5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odonto.Application", "Odonto.Application\Odonto.Application.csproj", "{0D8BEF93-A6B8-4053-856F-A785EF5193AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odonto.Application", "Odonto.Application\Odonto.Application.csproj", "{0D8BEF93-A6B8-4053-856F-A785EF5193AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odonto.IoC", "Odonto.IoC\Odonto.IoC.csproj", "{0D55F506-79E0-4ECE-8A71-4EA10F8076D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odonto.IoC", "Odonto.IoC\Odonto.IoC.csproj", "{0D55F506-79E0-4ECE-8A71-4EA10F8076D8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{C8B65541-CE91-4838-BF16-7CEFDEA887DF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence", "{31A0E9B1-2B3E-4032-818C-BBD3B6BC2EF7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{C38AC5E2-8C06-4806-A398-8FA4964CF736}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odonto.Mvc", "Odonto.Mvc\Odonto.Mvc.csproj", "{CA8C9464-3450-4D34-B8C8-E15291FAC18C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{0D55F506-79E0-4ECE-8A71-4EA10F8076D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D55F506-79E0-4ECE-8A71-4EA10F8076D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D55F506-79E0-4ECE-8A71-4EA10F8076D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA8C9464-3450-4D34-B8C8-E15291FAC18C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA8C9464-3450-4D34-B8C8-E15291FAC18C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA8C9464-3450-4D34-B8C8-E15291FAC18C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA8C9464-3450-4D34-B8C8-E15291FAC18C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{15B7D023-EC2F-4F66-B0DC-19D231E7BA5D} = {31A0E9B1-2B3E-4032-818C-BBD3B6BC2EF7}
 		{0D8BEF93-A6B8-4053-856F-A785EF5193AF} = {C38AC5E2-8C06-4806-A398-8FA4964CF736}
 		{0D55F506-79E0-4ECE-8A71-4EA10F8076D8} = {C38AC5E2-8C06-4806-A398-8FA4964CF736}
+		{CA8C9464-3450-4D34-B8C8-E15291FAC18C} = {C8B65541-CE91-4838-BF16-7CEFDEA887DF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {39467DD6-C8AF-4B1B-A105-08487614FCC0}

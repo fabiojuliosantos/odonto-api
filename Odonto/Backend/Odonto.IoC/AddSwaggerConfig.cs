@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 
 namespace Odonto.IoC.Configuration;
 
@@ -24,12 +23,12 @@ public static class SwaggerConfig
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
+                Description = "Insira o token JWT desta maneira: Bearer {seu token}",
                 Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer",
-                BearerFormat ="JWT",
+                BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Description = "Autorização de Usuários via Token JWT",
+                Type = SecuritySchemeType.ApiKey,
             });
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -43,7 +42,7 @@ public static class SwaggerConfig
                             Id = "Bearer"
                         }
                     },
-                    new string[]{}
+                    new string[] {}
                 }
             });
             var xmlFileName = $"Odonto.API.xml";

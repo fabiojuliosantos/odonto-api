@@ -29,5 +29,4 @@
 - [X] Geração de Token JWT.
 - [X] Proteger Endpoints com Token JWT.
 - [ ] Verificação das roles dos usuários.
-- [ ] Implementação do Front-end.
 - [ ] Dockerizar o projeto.

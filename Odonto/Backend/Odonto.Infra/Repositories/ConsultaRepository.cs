@@ -25,10 +25,13 @@ public class ConsultaRepository : Repository<Consulta>, IConsultaRepository
     public async Task<IPagedList<Consulta>> BuscarConsultasPaginadas(ConsultasParameters param)
     {
         var consultasPaginadas = await BuscarTodosAsync();
+
         var consultasOrdenadas = consultasPaginadas.OrderBy(c => c.ConsultaId)
-            .AsQueryable();  
+                                                   .AsQueryable();  
+        
         var consultasRetorno = await consultasPaginadas.ToPagedListAsync(param.PageNumber, param.PageSize);
         
         return consultasRetorno;
     }
+
 }

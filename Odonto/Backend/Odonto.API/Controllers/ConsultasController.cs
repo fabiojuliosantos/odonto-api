@@ -21,7 +21,7 @@ public class ConsultasController : ControllerBase
     #endregion MEMBROS
 
     #region CONSTRUTOR
-    public ConsultasController(IConsultaService service, 
+    public ConsultasController(IConsultaService service,
                                IMapper mapper)
     {
         _service = service;
@@ -51,16 +51,36 @@ public class ConsultasController : ControllerBase
     /// <param name="id">ID da consulta que será buscada</param>
     /// <returns>Retorna o objeto da consulta</returns>
     [HttpGet("buscar-consulta-id/{id}")]
-
     public async Task<ActionResult<ConsultasDTO>> BuscarConsultaPorId(int id)
     {
-        var consulta = await _service.BuscarConsultaPorIdAsync(id);
+        try
+        {
+            var consulta = await _service.BuscarConsultaPorIdAsync(id);
+            
+            if (consulta is null)
+            {
+                return NotFound(new ProblemDetails
+                {
+                    Status = StatusCodes.Status404NotFound,
+                    Title = "Consulta não encontrada",
+                    Detail = "Consulta com o ID especificado não foi encontrada."
+                });
+            }
 
-        var consultaDto = _mapper.Map<ConsultasDTO>(consulta);
-
-        return Ok(consultaDto);
+            var consultaDto = _mapper.Map<ConsultasDTO>(consulta);
+            
+            return Ok(consultaDto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "Erro ao buscar consulta",
+                Detail = ex.Message
+            });
+        }
     }
-
     #endregion GET
 
     #region POST
@@ -70,14 +90,35 @@ public class ConsultasController : ControllerBase
     /// <param name="consultaDto">Objeto da consulta que será cadastrada</param>
     /// <returns>Retorna o objeto da consulta cadastrada</returns>
     [HttpPost("cadastrar-consulta")]
-    [Authorize(Policy = "Admin")]
+    [Authorize]
     public ActionResult<ConsultasCadastroDTO> CadastrarConsulta(ConsultasCadastroDTO consultaDto)
     {
-        var consulta = _mapper.Map<Consulta>(consultaDto);
+        try
+        {
+            if(consultaDto is null)
+            {
+                return NotFound(new ProblemDetails
+                {
+                    Status = StatusCodes.Status404NotFound,
+                    Title = "Dados não fornecidos",
+                    Detail = "Os dados da consulta não foram fornecidos"
+                });
+            }
+            var consulta = _mapper.Map<Consulta>(consultaDto);
 
-        _service.CadastrarConsulta(consulta);
+            _service.CadastrarConsulta(consulta);
 
-        return Ok(consulta);
+            return Ok(consulta);
+        }
+        catch (Exception ex) 
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "Erro ao cadastrar consulta",
+                Detail = ex.Message
+            });
+        }
     }
 
     #endregion POST
@@ -93,6 +134,7 @@ public class ConsultasController : ControllerBase
 
     public ActionResult<ConsultasDTO> AtualizarConsulta(ConsultasDTO consultaDto)
     {
+
         var consulta = _mapper.Map<Consulta>(consultaDto);
 
         _service.AtualizarConsulta(consulta);

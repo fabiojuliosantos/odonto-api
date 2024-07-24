@@ -50,7 +50,7 @@ public class PacientesController : ControllerBase
     /// </summary>
     /// <param name="id">ID do paciente que irá buscar</param>
     /// <returns></returns>
-    [HttpGet("buscar-paciente-id/{id}")]
+    [HttpGet("buscar-paciente-id/{id}")] //Consulta pois não altera o estado
     public async Task<ActionResult<Paciente>> BuscarPacientePorId(int id)
     {
         var paciente = await _service.BuscarPacientePorIdAsync(id);
@@ -69,8 +69,8 @@ public class PacientesController : ControllerBase
     /// </summary>
     /// <param name="pacienteDto">Objeto de Paciente</param>
     /// <returns>Retorna o objeto do paciente cadastrado</returns>
-    [Authorize]
-    [HttpPost("cadastrar-paciente")]
+    //[Authorize]
+    [HttpPost("cadastrar-paciente")] //Comando pois altera os estados
     public ActionResult<PacientesCadastroDTO> CadastrarPaciente(PacientesCadastroDTO pacienteDto)
     {
         var paciente = _mapper.Map<Paciente>(pacienteDto);

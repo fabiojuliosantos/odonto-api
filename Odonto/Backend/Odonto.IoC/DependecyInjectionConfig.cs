@@ -20,6 +20,9 @@ public static class DependecyInjectionConfig
         
         services.AddScoped<ITokenService, TokenService>();
 
+        var handlers = AppDomain.CurrentDomain.Load("Odonto.Application");
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(handlers));
+
         return services;
     }
 }

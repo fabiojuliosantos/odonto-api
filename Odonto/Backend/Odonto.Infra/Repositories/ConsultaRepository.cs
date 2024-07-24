@@ -32,6 +32,7 @@ public class ConsultaRepository : Repository<Consulta>, IConsultaRepository
         var consultasRetorno = await consultasPaginadas.ToPagedListAsync(param.PageNumber, param.PageSize);
         
         return consultasRetorno;
+
     }
 
 }

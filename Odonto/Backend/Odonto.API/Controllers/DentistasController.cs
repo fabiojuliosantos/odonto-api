@@ -54,7 +54,7 @@ public class DentistasController : ControllerBase
     /// <returns>Retorna o objeto do dentista cadastrado</returns>
     /// <exception cref="Exception"></exception>
     [HttpPost("cadastrar-dentista")]
-    [Authorize]
+    //[Authorize]
     public ActionResult<DentistasCadastroDTO> CadastrarDentista(DentistasCadastroDTO dentistaDto)
     {
         try

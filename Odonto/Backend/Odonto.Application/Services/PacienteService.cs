@@ -1,4 +1,6 @@
-﻿using Odonto.Application.Interfaces;
+﻿using MediatR;
+using Odonto.Application.Interfaces;
+using Odonto.Application.Pacientes.Commands;
 using Odonto.Domain.Entities;
 using Odonto.Domain.Pagination;
 using Odonto.Infra.Interfaces;
@@ -9,17 +11,23 @@ namespace Odonto.Application.Services;
 public class PacienteService : IPacienteService
 {
     private readonly IPacienteRepository _repository;
+    private readonly IMediator _mediator;
 
-    public PacienteService(IPacienteRepository repository)
+    public PacienteService(IPacienteRepository repository,
+                           IMediator mediator)
     {
         _repository = repository;
+        _mediator = mediator;
     }
+
     #region Cadastrar
 
-    public Paciente CadastrarPaciente(Paciente paciente)
+    public async Task<Paciente>CadastrarPaciente(CadastrarPacienteCommand command)
     {
-        if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
-        _repository.Cadastrar(paciente);
+        if (command is null) throw new Exception("Não foram fornecidas informações para cadastrar o paciente!");
+
+        var paciente = await _mediator.Send(command);
+        
         return paciente;
     }
 
@@ -29,8 +37,10 @@ public class PacienteService : IPacienteService
 
     public Paciente AtualizarPaciente(Paciente paciente)
     {
-        if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
+        if (paciente is null) throw new Exception("Não foram fornecidas informações para atualizar o paciente!");
+        
         _repository.Atualizar(paciente);
+        
         return paciente;
     }
 

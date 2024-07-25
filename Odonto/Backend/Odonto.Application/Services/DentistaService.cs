@@ -13,26 +13,42 @@ public class DentistaService : IDentistaService
     }
     public Dentista AtualizarDentista(Dentista dentista)
     {
-        throw new NotImplementedException();
+        var dentistaExistente = _repository.BuscarDentistaPeloIdConsultaAsync(dentista.DentistaId);
+        
+        if (dentistaExistente is null) throw new Exception("Dentista não existente!");
+
+        _repository.Atualizar(dentista);
+
+        return dentista;
+        
     }
 
-    public Task<Dentista> BuscarPorIdAsync(int id)
+    public async Task<Dentista> BuscarPorIdAsync(int id)
     {
-        throw new NotImplementedException();
+        Dentista dentista = await _repository.BuscarDentistaPeloIdConsultaAsync(id);
+
+        return dentista;
+        
     }
 
-    public Task<IEnumerable<Dentista>> BuscarTodosDentistasAsync()
+    public async Task<IEnumerable<Dentista>> BuscarTodosDentistasAsync()
     {
-        throw new NotImplementedException();
+        IEnumerable<Dentista> dentistas = await _repository.BuscarTodosAsync();
+
+        return dentistas;
     }
 
     public Dentista CadastrarDentista(Dentista dentista)
     {
-        throw new NotImplementedException();
+        if (dentista is null) throw new Exception("Não foram informados dados para cadastrar o dentista!");
+        _repository.Cadastrar(dentista);
+        return dentista;
     }
 
     public Dentista ExcluirDentista(Dentista dentista)
     {
-        throw new NotImplementedException();
+        if (dentista is null) throw new Exception("Não foram informados dados para excluir o dentista!");
+        _repository.Deletar(dentista);
+        return dentista;
     }
 }

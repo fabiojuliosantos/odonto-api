@@ -90,7 +90,7 @@ public class ConsultasController : ControllerBase
     /// <param name="consultaDto">Objeto da consulta que será cadastrada</param>
     /// <returns>Retorna o objeto da consulta cadastrada</returns>
     [HttpPost("cadastrar-consulta")]
-    [Authorize]
+    //[Authorize]
     public ActionResult<ConsultasCadastroDTO> CadastrarConsulta(ConsultasCadastroDTO consultaDto)
     {
         try

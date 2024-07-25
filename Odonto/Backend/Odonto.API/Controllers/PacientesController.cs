@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Odonto.API.DTOs.Pacientes;
 using Odonto.Application.Interfaces;
+using Odonto.Application.Pacientes.Commands;
 using Odonto.Domain.Entities;
 
 namespace Odonto.API.Controllers;
@@ -17,16 +19,19 @@ public class PacientesController : ControllerBase
     #region MEMBROS    
 
     private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
     private readonly IPacienteService _service;
 
     #endregion MEMBROS
 
     #region CONSTRUTOR
     public PacientesController(IMapper mapper, 
-                               IPacienteService service)
+                               IPacienteService service,
+                               IMediator mediator)
     {
         _service = service;
         _mapper = mapper;
+        _mediator = mediator;
     }
     #endregion CONSTRUTOR
 
@@ -71,11 +76,11 @@ public class PacientesController : ControllerBase
     /// <returns>Retorna o objeto do paciente cadastrado</returns>
     //[Authorize]
     [HttpPost("cadastrar-paciente")] //Comando pois altera os estados
-    public ActionResult<PacientesCadastroDTO> CadastrarPaciente(PacientesCadastroDTO pacienteDto)
+    public async Task<ActionResult<PacientesCadastroDTO>> CadastrarPaciente(CadastrarPacienteCommand command)
     {
-        var paciente = _mapper.Map<Paciente>(pacienteDto);
+        //var paciente = _mediator.Send(command);
 
-        _service.CadastrarPaciente(paciente);
+        Paciente paciente = await _service.CadastrarPaciente(command);
 
         return Ok(paciente);
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Services;
+using Odonto.Domain.Entities;
 using Odonto.Infra.Interfaces;
 using Odonto.Infra.Repositories;
 
@@ -19,6 +20,8 @@ public static class DependecyInjectionConfig
         services.AddScoped<IConsultaService, ConsultaService>();
         
         services.AddScoped<ITokenService, TokenService>();
+
+        services.AddTransient<IRepository<Paciente>, PacienteRepository>();
 
         var handlers = AppDomain.CurrentDomain.Load("Odonto.Application");
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(handlers));

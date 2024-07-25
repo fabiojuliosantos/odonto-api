@@ -1,4 +1,5 @@
-﻿using Odonto.Domain.Entities;
+﻿using Odonto.Application.Pacientes.Commands;
+using Odonto.Domain.Entities;
 using Odonto.Domain.Pagination;
 using X.PagedList;
 
@@ -10,7 +11,7 @@ public interface IPacienteService
     Task<IPagedList<Paciente>> PacientesPaginadosAsync(PacientesParameters param);
     Task<Paciente> BuscarPacientePorIdAsync(int id);
 
-    Paciente CadastrarPaciente(Paciente paciente);
+    Task<Paciente> CadastrarPaciente(CadastrarPacienteCommand command);
     Paciente AtualizarPaciente(Paciente paciente);
     Paciente ExcluirPaciente(Paciente paciente);
 }

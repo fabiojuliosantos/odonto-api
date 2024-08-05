@@ -6,8 +6,8 @@ namespace Odonto.Application.Pacientes.Commands;
 
 public class CadastrarPacienteCommandHandler : IRequestHandler<CadastrarPacienteCommand, Paciente>
 {
-    private readonly IRepository<Paciente> _repository;
-    public CadastrarPacienteCommandHandler(IRepository<Paciente> repository)
+    private readonly IPacienteRepository _repository;
+    public CadastrarPacienteCommandHandler(IPacienteRepository repository)
     {
         _repository = repository;
     }

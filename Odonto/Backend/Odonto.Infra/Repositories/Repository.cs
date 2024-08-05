@@ -49,9 +49,16 @@ public class Repository<T> : IRepository<T> where T : class
     
     public T Atualizar(T entity)
     {
-        _context.Set<T>().Update(entity);
-        _context.SaveChanges();
-        return entity;
+        try
+        {
+            _context.Set<T>().Update(entity);
+            _context.SaveChanges();
+            return entity;
+        }
+        catch(Exception)
+        {
+            throw new Exception("Ocorreu um erro ao atualizar as informações");
+        }
     }
     
     #endregion Atualizar

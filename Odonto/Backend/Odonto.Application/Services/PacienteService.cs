@@ -27,7 +27,8 @@ public class PacienteService : IPacienteService
         if (command is null) throw new Exception("Não foram fornecidas informações para cadastrar o paciente!");
 
         var paciente = await _mediator.Send(command);
-        
+        Console.WriteLine("Teste");
+
         return paciente;
     }
 
@@ -35,11 +36,11 @@ public class PacienteService : IPacienteService
 
     #region Atualizar
 
-    public Paciente AtualizarPaciente(Paciente paciente)
+    public async Task<Paciente> AtualizarPaciente(AtualizarPacienteCommand command)
     {
-        if (paciente is null) throw new Exception("Não foram fornecidas informações para atualizar o paciente!");
+        if (command is null) throw new Exception("Não foram fornecidas informações para atualizar o paciente!");
         
-        _repository.Atualizar(paciente);
+        var paciente = await _mediator.Send(command);
         
         return paciente;
     }
@@ -48,10 +49,12 @@ public class PacienteService : IPacienteService
 
     #region Excluir
 
-    public Paciente ExcluirPaciente(Paciente paciente)
+    public async Task<Paciente> ExcluirPaciente(ExcluirPacienteCommand command)
     {
-        if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
-        _repository.Deletar(paciente);
+        if (command is null) throw new Exception("Não foram informados dados para o paciente!");
+        
+        var paciente = await _mediator.Send(command);
+        
         return paciente;
     }
 
@@ -62,6 +65,7 @@ public class PacienteService : IPacienteService
     public async Task<IEnumerable<Paciente>> BuscarTodosPacientesAsync()
     {
         var pacientes = await _repository.BuscarTodosAsync();
+        
         return pacientes;
     }
 

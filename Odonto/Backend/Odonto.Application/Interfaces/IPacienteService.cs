@@ -12,6 +12,6 @@ public interface IPacienteService
     Task<Paciente> BuscarPacientePorIdAsync(int id);
 
     Task<Paciente> CadastrarPaciente(CadastrarPacienteCommand command);
-    Paciente AtualizarPaciente(Paciente paciente);
-    Paciente ExcluirPaciente(Paciente paciente);
+    Task<Paciente> AtualizarPaciente(AtualizarPacienteCommand command);
+    Task<Paciente> ExcluirPaciente(ExcluirPacienteCommand command);
 }

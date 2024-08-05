@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Services;
 using Odonto.Domain.Entities;
+using Odonto.Infra.Context;
+using Odonto.Infra.Identity;
 using Odonto.Infra.Interfaces;
 using Odonto.Infra.Repositories;
 
@@ -11,6 +14,7 @@ public static class DependecyInjectionConfig
 {
     public static IServiceCollection ResolveDependecies(this IServiceCollection services)
     {
+
         services.AddScoped<IPacienteRepository, PacienteRepository>();
         services.AddScoped<IDentistaRepository, DentistaRepository>();
         services.AddScoped<IConsultaRepository, ConsultaRepository>();

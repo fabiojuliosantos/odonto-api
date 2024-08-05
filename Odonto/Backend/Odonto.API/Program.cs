@@ -23,13 +23,9 @@ var secretKey = builder.Configuration["Jwt:SecretKey"] ??
 
 #region Servicos
 
-#region Configuracao Identity
-
 builder.Services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
-
-#endregion Configuracao Identity
 
 #region Configuracao JWT
 

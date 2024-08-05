@@ -74,7 +74,7 @@ public class PacientesController : ControllerBase
     /// </summary>
     /// <param name="pacienteDto">Objeto de Paciente</param>
     /// <returns>Retorna o objeto do paciente cadastrado</returns>
-    //[Authorize]
+    [Authorize]
     [HttpPost("cadastrar-paciente")] //Comando pois altera os estados
     public async Task<ActionResult<PacientesCadastroDTO>> CadastrarPaciente(CadastrarPacienteCommand command)
     {
@@ -95,14 +95,14 @@ public class PacientesController : ControllerBase
     /// <param name="pacienteDto">Objeto do Paciente</param>
     /// <returns>Retorna o objeto do paciente</returns>
     [Authorize]
-    [HttpPut("atualizar-paciente")]
-    public ActionResult<PacientesDTO> AtualizarPaciente(PacientesDTO pacienteDto)
+    [HttpPut("atualizar-paciente/{id:int}")]
+    public ActionResult<PacientesDTO> AtualizarPaciente(int id, AtualizarPacienteCommand command)
     {
-        var paciente = _mapper.Map<Paciente>(pacienteDto);
+        command.PacienteId = id;
 
-        _service.AtualizarPaciente(paciente);
+        _service.AtualizarPaciente(command);
 
-        return Ok(paciente);
+        return Ok(command);
     }
     #endregion PUT
 
@@ -115,13 +115,13 @@ public class PacientesController : ControllerBase
     /// <returns>Retorna o objeto do paciente</returns>
     [Authorize]
     [HttpDelete("excluir-paciente/")]
-    public ActionResult<PacientesDTO> ExcluirPaciente(PacientesDTO pacienteDto)
+    public ActionResult<ExcluirPacienteCommand> ExcluirPaciente(ExcluirPacienteCommand command)
     {
-        var paciente = _mapper.Map<Paciente>(pacienteDto);
+        //var paciente = _mapper.Map<Paciente>(pacienteDto);
 
-        _service.ExcluirPaciente(paciente);
+        _service.ExcluirPaciente(command);
 
-        return Ok($"Paciente {paciente.Nome}, excluído com sucesso!");
+        return Ok($"Paciente {command.Nome}, excluído com sucesso!");
     }
 
     #endregion DELETE

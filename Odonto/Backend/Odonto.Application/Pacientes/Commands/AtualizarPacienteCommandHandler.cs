@@ -13,13 +13,13 @@ public class AtualizarPacienteCommandHandler : IRequestHandler<AtualizarPaciente
     }
     public async Task<Paciente> Handle(AtualizarPacienteCommand request, CancellationToken cancellationToken)
     {
-        Paciente pacienteExistente = await _repository.BuscarPacientePeloIdConsultaAsync(request.PacienteId);
+        Paciente pacienteExistente = await _repository.BuscarPorIdAsync( p => p.PacienteId == request.PacienteId);
         
         if (pacienteExistente == null) throw new Exception("Paciente não encontrado!");
         
         Paciente paciente = new Paciente()
         {
-            PacienteId = request.PacienteId,
+            PacienteId = pacienteExistente.PacienteId,
             Nome = request.Nome,
             DataNascimento = request.DataNascimento,
             Email = request.Email,

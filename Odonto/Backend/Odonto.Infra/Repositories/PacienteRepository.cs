@@ -44,10 +44,11 @@ public class PacienteRepository : IPacienteRepository
     {
         var sql = @"UPDATE PACIENTES SET NOME=@NOME, CPF=@CPF, EMAIL=@EMAIL, 
                            TELEFONE=@TELEFONE, CEP=@CEP, LOGRADOURO=@LOGRADOURO, 
-                           NUMEROCASA=@NUMEROCASA";
+                           NUMEROCASA=@NUMEROCASA WHERE PACIENTEID=@PACIENTEID";
 
         object parametros = new
         {
+            PACIENTEID = paciente.PacienteId,
             NOME = paciente.Nome,
             CPF = paciente.Cpf,
             EMAIL = paciente.Email,

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Odonto.API.DTOs.Pacientes;
 using Odonto.Application.Interfaces;
+using Odonto.Application.Mediator.Pacientes.Commands;
 using Odonto.Domain.Entities;
 
 namespace Odonto.API.Controllers;
@@ -22,7 +23,7 @@ public class PacientesController : ControllerBase
     #endregion MEMBROS
 
     #region CONSTRUTOR
-    public PacientesController(IMapper mapper, 
+    public PacientesController(IMapper mapper,
                                IPacienteService service)
     {
         _service = service;
@@ -53,9 +54,11 @@ public class PacientesController : ControllerBase
     [HttpGet("buscar-paciente-id/{id}")] //Consulta pois não altera o estado
     public async Task<ActionResult<Paciente>> BuscarPacientePorId(int id)
     {
-        var paciente = await _service.BuscarPacientePorIdAsync(id);
+        BuscarPacientePorIdCommand command = new BuscarPacientePorIdCommand() { PacienteId = id };
 
-        if (paciente is null) return NotFound();
+        if (command is null) return NotFound();
+
+        Paciente paciente = await _service.BuscarPacientePorIdAsync(command);
 
         return Ok(paciente);
     }
@@ -65,19 +68,16 @@ public class PacientesController : ControllerBase
     #region POST
 
     /// <summary>
-    /// Cadastra um novo paciente [Endpoint Protegido]
+    /// Cadastra um novo paciente
     /// </summary>
-    /// <param name="pacienteDto">Objeto de Paciente</param>
-    /// <returns>Retorna o objeto do paciente cadastrado</returns>
-    //[Authorize]
+    /// <param name="command">Dados para cadastro do novo paciente</param>
+    /// <returns>Retorna os dados do paciente cadastrado</returns>
     [HttpPost("cadastrar-paciente")] //Comando pois altera os estados
-    public ActionResult<PacientesCadastroDTO> CadastrarPaciente(PacientesCadastroDTO pacienteDto)
+    public async Task<ActionResult> CadastrarPaciente(CadastrarPacienteCommand command)
     {
-        var paciente = _mapper.Map<Paciente>(pacienteDto);
+        Paciente paciente = await _service.CadastrarPaciente(command);
 
-        _service.CadastrarPaciente(paciente);
-
-        return Ok(paciente);
+        return Ok($"Paciente {paciente.Nome} cadastrado com sucesso!");
     }
 
     #endregion POST
@@ -91,11 +91,9 @@ public class PacientesController : ControllerBase
     /// <returns>Retorna o objeto do paciente</returns>
     [Authorize]
     [HttpPut("atualizar-paciente")]
-    public ActionResult<PacientesDTO> AtualizarPaciente(PacientesDTO pacienteDto)
+    public async Task<ActionResult>  AtualizarPaciente(AtualizarPacienteCommand command)
     {
-        var paciente = _mapper.Map<Paciente>(pacienteDto);
-
-        _service.AtualizarPaciente(paciente);
+        Paciente paciente = await _service.AtualizarPaciente(command);
 
         return Ok(paciente);
     }
@@ -110,13 +108,11 @@ public class PacientesController : ControllerBase
     /// <returns>Retorna o objeto do paciente</returns>
     [Authorize]
     [HttpDelete("excluir-paciente/")]
-    public ActionResult<PacientesDTO> ExcluirPaciente(int id)
+    public async Task<ActionResult<PacientesDTO>> ExcluirPacienteAsync(ExcluirPacienteCommand command)
     {
-        //var paciente = _mapper.Map<Paciente>(pacienteDto);
+        await _service.ExcluirPaciente(command);
 
-        _service.ExcluirPaciente(id);
-
-        return Ok($"Paciente {id}, excluído com sucesso!");
+        return Ok($"Paciente {command}, excluído com sucesso!");
     }
 
     #endregion DELETE

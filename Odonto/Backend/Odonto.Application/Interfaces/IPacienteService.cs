@@ -1,4 +1,5 @@
-﻿using Odonto.Domain.Entities;
+﻿using Odonto.Application.Mediator.Pacientes.Commands;
+using Odonto.Domain.Entities;
 using Odonto.Domain.Pagination;
 using X.PagedList;
 
@@ -6,9 +7,9 @@ namespace Odonto.Application.Interfaces;
 
 public interface IPacienteService
 {
-    Task<Paciente> BuscarPacientePorIdAsync(int id);
+    Task<Paciente> BuscarPacientePorIdAsync(BuscarPacientePorIdCommand command);
     Task<IEnumerable<Paciente>> BuscarTodosPacientesAsync();
-    Task<Paciente> CadastrarPaciente(Paciente paciente);
-    Task<Paciente> AtualizarPaciente(Paciente paciente);
-    Task<Paciente> ExcluirPaciente(int id);
+    Task<Paciente> CadastrarPaciente(CadastrarPacienteCommand command);
+    Task<Paciente> AtualizarPaciente(AtualizarPacienteCommand command);
+    Task<Paciente> ExcluirPaciente(ExcluirPacienteCommand command);
 }

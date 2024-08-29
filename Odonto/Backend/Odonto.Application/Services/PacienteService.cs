@@ -1,25 +1,27 @@
-﻿using Odonto.Application.Interfaces;
+﻿using MediatR;
+using Odonto.Application.Interfaces;
+using Odonto.Application.Mediator.Pacientes.Commands;
 using Odonto.Domain.Entities;
-using Odonto.Domain.Pagination;
 using Odonto.Infra.Interfaces;
-using X.PagedList;
 
 namespace Odonto.Application.Services;
 
 public class PacienteService : IPacienteService
 {
     private readonly IPacienteRepository _repository;
-
-    public PacienteService(IPacienteRepository repository)
+    private readonly IMediator _mediator;
+    public PacienteService(IPacienteRepository repository,
+                           IMediator mediator)
     {
         _repository = repository;
+        _mediator = mediator;
     }
     #region Cadastrar
 
-    public async Task<Paciente> CadastrarPaciente(Paciente paciente)
+    public async Task<Paciente> CadastrarPaciente(CadastrarPacienteCommand command)
     {
-        if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
-        await _repository.CadastrarNovo(paciente);
+        if (command is null) throw new Exception("Não foram informados dados para o paciente!");
+        Paciente paciente = await _mediator.Send(command);
         return paciente;
     }
 
@@ -27,10 +29,10 @@ public class PacienteService : IPacienteService
 
     #region Atualizar
 
-    public async Task<Paciente> AtualizarPaciente(Paciente paciente)
+    public async Task<Paciente> AtualizarPaciente(AtualizarPacienteCommand command)
     {
-        if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
-        await _repository.AtualizarPaciente(paciente);
+        if (command is null) throw new Exception("Não foram informados dados para o paciente!");
+        Paciente paciente = await _mediator.Send(command);
         return paciente;
     }
 
@@ -38,11 +40,10 @@ public class PacienteService : IPacienteService
 
     #region Excluir
 
-    public async Task<Paciente> ExcluirPaciente(int id)
+    public async Task<Paciente> ExcluirPaciente(ExcluirPacienteCommand command)
     {
-        Paciente paciente = await _repository.BuscarPorId(id);
-        if (id < 1) throw new Exception("Não foram informados dados para o paciente!");
-        await _repository.ExcluirPaciente(id);
+        if (command.PacienteId< 1) throw new Exception("Não foram informados dados para o paciente!");
+        Paciente paciente = await _mediator.Send(command);
         return paciente;
     }
 
@@ -52,15 +53,24 @@ public class PacienteService : IPacienteService
 
     public async Task<IEnumerable<Paciente>> BuscarTodosPacientesAsync()
     {
-        var pacientes = await _repository.BuscarTodos();
+        BuscarTodosPacientesCommand command = new BuscarTodosPacientesCommand();
+        var pacientes = await _mediator.Send(command);
         return pacientes;
     }
 
-    public async Task<Paciente> BuscarPacientePorIdAsync(int id)
+    public async Task<Paciente> BuscarPacientePorIdAsync(BuscarPacientePorIdCommand command)
     {
-        var paciente = await _repository.BuscarPorId(id);
-        if (paciente is null) throw new Exception($"Paciente de id: {id} não foi encontrado!");
-        return paciente;
+        try
+        {
+            Paciente paciente = await _mediator.Send(command);
+            if (paciente is null) throw new Exception($"Paciente de id: {command.PacienteId} não foi encontrado!");
+            return paciente;
+        }
+
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     #endregion Buscar

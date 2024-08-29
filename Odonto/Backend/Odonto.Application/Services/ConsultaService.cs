@@ -17,11 +17,11 @@ public class ConsultaService : IConsultaService
 
     #region Cadastrar
 
-    public Consulta CadastrarConsulta(Consulta consulta)
+    public async Task<Consulta> CadastrarConsulta(Consulta consulta)
     {
         if (consulta is null) throw new Exception("Dados para consulta não foram informados!");
 
-        _repository.Cadastrar(consulta);
+        await _repository.CadastrarConsulta(consulta);
 
         return consulta;
     }
@@ -30,13 +30,13 @@ public class ConsultaService : IConsultaService
 
     #region Atualizar
 
-    public Consulta AtualizarConsulta(Consulta consulta)
+    public async Task<Consulta> AtualizarConsulta(Consulta consulta)
     {
         try
         {
             if (consulta is null) throw new Exception("Dados para consulta não foram informados!");
 
-            _repository.Atualizar(consulta);
+            await _repository.AtualizarConsulta(consulta);
 
             return consulta;
         }
@@ -50,11 +50,13 @@ public class ConsultaService : IConsultaService
 
     #region Excluir
 
-    public Consulta ExcluirConsulta(Consulta consulta)
+    public async Task<Consulta> ExcluirConsulta(int id)
     {
-        if (consulta is null) throw new Exception("Dados para consulta não foram informados!");
+        if (id < 1) throw new Exception("Dados para consulta não foram informados!");
 
-        _repository.Deletar(consulta);
+        Consulta consulta = await BuscarConsultaPorIdAsync(id);
+
+        await _repository.ExcluirConsulta(id);
 
         return consulta;
     }
@@ -65,19 +67,14 @@ public class ConsultaService : IConsultaService
 
     public async Task<IEnumerable<Consulta>> BuscarTodasConsultasAsync()
     {
-        var consultas = await _repository.BuscarTodosAsync();
+        var consultas = await _repository.BuscarTodasConsultas();
         return consultas;
-    }
-
-    public async Task<IPagedList<Consulta>> BuscarConsultasPaginadas(ConsultasParameters param)
-    {
-        return await _repository.BuscarConsultasPaginadas(param);
     }
 
     public async Task<Consulta> BuscarConsultaPorIdAsync(int id)
     {
 
-        var consulta = await _repository.BuscarConsultaComPacienteDentistaPorIdAsync(id);
+        var consulta = await _repository.BuscarConsultaPorId(id);
 
         return consulta;
     }

@@ -6,11 +6,9 @@ namespace Odonto.Application.Interfaces;
 
 public interface IPacienteService
 {
-    Task<IEnumerable<Paciente>> BuscarTodosPacientesAsync();
-    Task<IPagedList<Paciente>> PacientesPaginadosAsync(PacientesParameters param);
     Task<Paciente> BuscarPacientePorIdAsync(int id);
-
-    Paciente CadastrarPaciente(Paciente paciente);
-    Paciente AtualizarPaciente(Paciente paciente);
-    Paciente ExcluirPaciente(Paciente paciente);
+    Task<IEnumerable<Paciente>> BuscarTodosPacientesAsync();
+    Task<Paciente> CadastrarPaciente(Paciente paciente);
+    Task<Paciente> AtualizarPaciente(Paciente paciente);
+    Task<Paciente> ExcluirPaciente(int id);
 }

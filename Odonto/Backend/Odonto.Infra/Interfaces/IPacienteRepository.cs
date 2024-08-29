@@ -1,11 +1,12 @@
 ﻿using Odonto.Domain.Entities;
-using Odonto.Domain.Pagination;
-using X.PagedList;
 
 namespace Odonto.Infra.Interfaces;
 
-public interface IPacienteRepository : IRepository<Paciente>
+public interface IPacienteRepository
 {
-    Task<Paciente> BuscarPacientePeloIdConsultaAsync(int id);
-    Task<IPagedList<Paciente>> PacientesPaginados(PacientesParameters param);
+    Task<IEnumerable<Paciente>> BuscarTodos();
+    Task<Paciente> BuscarPorId(int id);
+    Task<Paciente> CadastrarNovo(Paciente paciente);
+    Task<Paciente> AtualizarPaciente(Paciente paciente);
+    Task<Paciente> ExcluirPaciente(int id);
 }

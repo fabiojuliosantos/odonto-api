@@ -110,13 +110,13 @@ public class PacientesController : ControllerBase
     /// <returns>Retorna o objeto do paciente</returns>
     [Authorize]
     [HttpDelete("excluir-paciente/")]
-    public ActionResult<PacientesDTO> ExcluirPaciente(PacientesDTO pacienteDto)
+    public ActionResult<PacientesDTO> ExcluirPaciente(int id)
     {
-        var paciente = _mapper.Map<Paciente>(pacienteDto);
+        //var paciente = _mapper.Map<Paciente>(pacienteDto);
 
-        _service.ExcluirPaciente(paciente);
+        _service.ExcluirPaciente(id);
 
-        return Ok($"Paciente {paciente.Nome}, excluído com sucesso!");
+        return Ok($"Paciente {id}, excluído com sucesso!");
     }
 
     #endregion DELETE

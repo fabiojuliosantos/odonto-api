@@ -7,9 +7,8 @@ namespace Odonto.Application.Interfaces;
 public interface IConsultaService
 {
     Task<IEnumerable<Consulta>> BuscarTodasConsultasAsync();
-    Task<IPagedList<Consulta>> BuscarConsultasPaginadas(ConsultasParameters param);
     Task<Consulta> BuscarConsultaPorIdAsync(int id);
-    Consulta CadastrarConsulta(Consulta consulta);
-    Consulta AtualizarConsulta(Consulta consulta);
-    Consulta ExcluirConsulta(Consulta consulta);
+    Task<Consulta> CadastrarConsulta(Consulta consulta);
+    Task<Consulta> AtualizarConsulta(Consulta consulta);
+    Task<Consulta> ExcluirConsulta(int id);
 }

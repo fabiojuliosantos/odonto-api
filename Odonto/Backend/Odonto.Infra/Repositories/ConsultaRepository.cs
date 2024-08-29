@@ -1,38 +1,91 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
 using Odonto.Domain.Entities;
-using Odonto.Domain.Pagination;
-using Odonto.Infra.Context;
 using Odonto.Infra.Interfaces;
-using X.PagedList;
+using System.Data;
 
 namespace Odonto.Infra.Repositories;
 
-public class ConsultaRepository : Repository<Consulta>, IConsultaRepository
+public class ConsultaRepository : IConsultaRepository
 {
-    public ConsultaRepository(AppDbContext context) : base(context)
+    private readonly IDbConnection _connection;
+
+    public ConsultaRepository(IDbConnection connection)
     {
+        _connection = connection;
     }
 
-    public async Task<Consulta> BuscarConsultaComPacienteDentistaPorIdAsync(int id)
+    public async Task<Consulta> AtualizarConsulta(Consulta consulta)
     {
-        var consulta = await _context.Consultas
-            .Include(c => c.Paciente)
-            .Include(c => c.Dentista)
-            .FirstOrDefaultAsync(c => c.ConsultaId == id);
+        var sql = @"UPDATE CONSULTAS SET DESCRICAO=@DESCRICAO, DATACONSULTA=@DATACONSULTA, DENTISTAID=@DENTISTAID, PACIENTEID=@PACIENTEID";
+
+        object parametros = new
+        {
+            DESCRICAO = consulta.Descricao,
+            DATACONSULTA = consulta.DataConsulta,
+            DENTISTAID = consulta.DentistaId,
+            PACIENTEID = consulta.PacienteId
+        };
+
+        var atualizados = await _connection.ExecuteAsync(sql, parametros);
+
+        if (atualizados > 0) return consulta;
+        return null;
+    }
+
+    public async Task<IEnumerable<Consulta>> BuscarConsultaPorDentista(int dentistaId)
+    {
+        var sql = $"SELECT * FROM CONSULTAS WHERE DENTISTAID={dentistaId}";
+        var consultas = await _connection.QueryAsync<Consulta>(sql);
+        return consultas;
+    }
+
+    public async Task<Consulta> BuscarConsultaPorId(int id)
+    {
+        var sql = $"SELECT * FROM CONSULTAS WHERE CONSULTAID={id}";
+        var consulta = await _connection.QueryFirstOrDefaultAsync<Consulta>(sql);
         return consulta;
     }
 
-    public async Task<IPagedList<Consulta>> BuscarConsultasPaginadas(ConsultasParameters param)
+    public async Task<IEnumerable<Consulta>> BuscarConsultaPorPaciente(int pacienteId)
     {
-        var consultasPaginadas = await BuscarTodosAsync();
-
-        var consultasOrdenadas = consultasPaginadas.OrderBy(c => c.ConsultaId)
-                                                   .AsQueryable();  
-        
-        var consultasRetorno = await consultasPaginadas.ToPagedListAsync(param.PageNumber, param.PageSize);
-        
-        return consultasRetorno;
-
+        var sql = $"SELECT * FROM CONSULTAS WHERE PACIENTEID={pacienteId}";
+        var consultas = await _connection.QueryAsync<Consulta>(sql);
+        return consultas;
     }
 
+    public async Task<IEnumerable<Consulta>> BuscarTodasConsultas()
+    {
+        var sql = "SELECT * FROM CONSULTAS";
+        var consultas = await _connection.QueryAsync<Consulta>(sql);
+        return consultas;
+    }
+
+    public async Task<Consulta> CadastrarConsulta(Consulta consulta)
+    {
+        var sql = @"INSERT INTO CONSULTAS(DESCRICAO,DATACONSULTA,DENTISTAID,PACIENTEID)
+                           VALUES(@DESCRICAO,@DATACONSULTA,@DENTISTAID,@PACIENTEID)";
+
+        object parametros = new
+        {
+            DESCRICAO = consulta.Descricao,
+            DATACONSULTA = consulta.DataConsulta,
+            DENTISTAID = consulta.DentistaId,
+            PACIENTEID = consulta.PacienteId
+        };
+
+        var cadastro = await _connection.ExecuteAsync(sql, parametros);
+        if (cadastro > 0) return consulta;
+        return null;
+    }
+
+    public async Task<Consulta> ExcluirConsulta(int id)
+    {
+        var consulta = new Consulta();
+
+        var sql = $"DELETE FROM CONSULTAS WHERE CONSULTAID={id}";
+
+        var exclusao = await _connection.ExecuteAsync(sql);
+        if (exclusao > 0) return consulta;
+        return null;
+    }
 }

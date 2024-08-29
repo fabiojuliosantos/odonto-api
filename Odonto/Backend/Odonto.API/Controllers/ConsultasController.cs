@@ -153,13 +153,13 @@ public class ConsultasController : ControllerBase
     [HttpDelete("excluir-consulta")]
     [Authorize(Policy = "Admin")]
 
-    public ActionResult<ConsultasDTO> ExcluirConsulta(ConsultasDTO consultaDto)
+    public ActionResult<ConsultasDTO> ExcluirConsulta(int id)
     {
-        var consulta = _mapper.Map<Consulta>(consultaDto);
+        //var consulta = _mapper.Map<Consulta>(consultaDto);
 
-        _service.ExcluirConsulta(consulta);
+        _service.ExcluirConsulta(id);
 
-        return Ok(consulta);
+        return Ok($"Consulta {id} excluída com sucesso!");
     }
     #endregion DELETE
 }

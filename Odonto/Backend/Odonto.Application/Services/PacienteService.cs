@@ -16,10 +16,10 @@ public class PacienteService : IPacienteService
     }
     #region Cadastrar
 
-    public Paciente CadastrarPaciente(Paciente paciente)
+    public async Task<Paciente> CadastrarPaciente(Paciente paciente)
     {
         if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
-        _repository.Cadastrar(paciente);
+        await _repository.CadastrarNovo(paciente);
         return paciente;
     }
 
@@ -27,10 +27,10 @@ public class PacienteService : IPacienteService
 
     #region Atualizar
 
-    public Paciente AtualizarPaciente(Paciente paciente)
+    public async Task<Paciente> AtualizarPaciente(Paciente paciente)
     {
         if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
-        _repository.Atualizar(paciente);
+        await _repository.AtualizarPaciente(paciente);
         return paciente;
     }
 
@@ -38,10 +38,11 @@ public class PacienteService : IPacienteService
 
     #region Excluir
 
-    public Paciente ExcluirPaciente(Paciente paciente)
+    public async Task<Paciente> ExcluirPaciente(int id)
     {
-        if (paciente is null) throw new Exception("Não foram informados dados para o paciente!");
-        _repository.Deletar(paciente);
+        Paciente paciente = await _repository.BuscarPorId(id);
+        if (id < 1) throw new Exception("Não foram informados dados para o paciente!");
+        await _repository.ExcluirPaciente(id);
         return paciente;
     }
 
@@ -51,20 +52,13 @@ public class PacienteService : IPacienteService
 
     public async Task<IEnumerable<Paciente>> BuscarTodosPacientesAsync()
     {
-        var pacientes = await _repository.BuscarTodosAsync();
+        var pacientes = await _repository.BuscarTodos();
         return pacientes;
-    }
-
-    public async Task<IPagedList<Paciente>> PacientesPaginadosAsync(PacientesParameters param)
-    {
-        var pacientesPaginados = await _repository.PacientesPaginados(param);
-
-        return pacientesPaginados;
     }
 
     public async Task<Paciente> BuscarPacientePorIdAsync(int id)
     {
-        var paciente = await _repository.BuscarPacientePeloIdConsultaAsync(id);
+        var paciente = await _repository.BuscarPorId(id);
         if (paciente is null) throw new Exception($"Paciente de id: {id} não foi encontrado!");
         return paciente;
     }

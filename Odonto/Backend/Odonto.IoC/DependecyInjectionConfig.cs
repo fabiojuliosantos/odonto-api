@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,8 @@ using Odonto.Infra.Context;
 using Odonto.Infra.Identity;
 using Odonto.Infra.Interfaces;
 using Odonto.Infra.Repositories;
+using System.Data;
+using System.Data.Common;
 using System.Text;
 
 namespace Odonto.IoC;
@@ -20,6 +23,15 @@ public static class DependecyInjectionConfig
     public static IServiceCollection ResolveDependecies(this IServiceCollection services, IConfiguration configuration)
     {
         string conectionString = configuration.GetConnectionString("DefaultConnection");
+
+        #region DbConnection
+        services.AddScoped<IDbConnection>(provider =>
+        {
+            SqlConnection connection = new SqlConnection(conectionString);
+            connection.Open();
+            return connection;
+        });
+        #endregion DbConnection
 
         #region Configuracao Identity
 
@@ -70,18 +82,31 @@ public static class DependecyInjectionConfig
 
         services.AddDbContext<AppDbContext>(options => { options.UseSqlServer(conectionString); });
 
+        #region repositories
+
         services.AddScoped<IPacienteRepository, PacienteRepository>();
         services.AddScoped<IDentistaRepository, DentistaRepository>();
         services.AddScoped<IConsultaRepository, ConsultaRepository>();
 
+        #endregion repositories 
+
+        #region services
+
         services.AddScoped<IPacienteService, PacienteService>();
         services.AddScoped<IDentistaService, DentistaService>();
         services.AddScoped<IConsultaService, ConsultaService>();
-
         services.AddScoped<ITokenService, TokenService>();
+
+        #endregion services
+
+        #region Mediatr
 
         var handlers = AppDomain.CurrentDomain.Load("Odonto.Application");
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(handlers));
+
+        #endregion Mediatr
+
+        #region Authorization
 
         services.AddAuthorization(options =>
         {
@@ -91,6 +116,9 @@ public static class DependecyInjectionConfig
             options.AddPolicy("Gestao", policy => policy.RequireRole("gerenciaTI", "direcao"));
             options.AddPolicy("DentistasDirecao", policy => policy.RequireRole("dentista", "direcao"));
         });
+
+        #endregion Authorization
+
         return services;
     }
 }

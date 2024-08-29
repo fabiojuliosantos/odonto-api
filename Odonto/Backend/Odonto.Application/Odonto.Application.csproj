@@ -15,4 +15,8 @@
       <ProjectReference Include="..\Odonto.Infra\Odonto.Infra.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Mediator\" />
+    </ItemGroup>
+
 </Project>

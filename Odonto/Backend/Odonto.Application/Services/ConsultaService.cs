@@ -1,4 +1,6 @@
-﻿using Odonto.Application.Interfaces;
+﻿using MediatR;
+using Odonto.Application.Interfaces;
+using Odonto.Application.Mediator.Consultas.Commands;
 using Odonto.Domain.Entities;
 using Odonto.Domain.Pagination;
 using Odonto.Infra.Interfaces;
@@ -8,20 +10,21 @@ namespace Odonto.Application.Services;
 
 public class ConsultaService : IConsultaService
 {
-    private readonly IConsultaRepository _repository;
+    private readonly IMediator _mediator;
 
-    public ConsultaService(IConsultaRepository repository)
+    public ConsultaService(IMediator mediator)
     {
-        _repository = repository;
+        _mediator = mediator;
     }
+
 
     #region Cadastrar
 
-    public async Task<Consulta> CadastrarConsulta(Consulta consulta)
+    public async Task<Consulta> CadastrarConsulta(CadastrarConsultaCommand command)
     {
-        if (consulta is null) throw new Exception("Dados para consulta não foram informados!");
+        if (command is null) throw new Exception("Dados para consulta não foram informados!");
 
-        await _repository.CadastrarConsulta(consulta);
+        Consulta consulta = await _mediator.Send(command);
 
         return consulta;
     }
@@ -30,13 +33,13 @@ public class ConsultaService : IConsultaService
 
     #region Atualizar
 
-    public async Task<Consulta> AtualizarConsulta(Consulta consulta)
+    public async Task<Consulta> AtualizarConsulta(AtualizarConsultaCommand command)
     {
         try
         {
-            if (consulta is null) throw new Exception("Dados para consulta não foram informados!");
+            if (command is null) throw new Exception("Dados para consulta não foram informados!");
 
-            await _repository.AtualizarConsulta(consulta);
+            Consulta consulta = await _mediator.Send(command);
 
             return consulta;
         }
@@ -50,13 +53,11 @@ public class ConsultaService : IConsultaService
 
     #region Excluir
 
-    public async Task<Consulta> ExcluirConsulta(int id)
+    public async Task<Consulta> ExcluirConsulta(ExcluirConsultaCommand command)
     {
-        if (id < 1) throw new Exception("Dados para consulta não foram informados!");
+        if (command.ConsultaId < 1) throw new Exception("Dados para consulta não foram informados!");
 
-        Consulta consulta = await BuscarConsultaPorIdAsync(id);
-
-        await _repository.ExcluirConsulta(id);
+        Consulta consulta = await _mediator.Send(command);
 
         return consulta;
     }
@@ -67,15 +68,14 @@ public class ConsultaService : IConsultaService
 
     public async Task<IEnumerable<Consulta>> BuscarTodasConsultasAsync()
     {
-        var consultas = await _repository.BuscarTodasConsultas();
+        BuscarTodasConsultasCommand command  = new BuscarTodasConsultasCommand();
+        IEnumerable<Consulta> consultas = await _mediator.Send(command);
         return consultas;
     }
 
-    public async Task<Consulta> BuscarConsultaPorIdAsync(int id)
+    public async Task<Consulta> BuscarConsultaPorIdAsync(BuscarConsultaPorIdCommand command)
     {
-
-        var consulta = await _repository.BuscarConsultaPorId(id);
-
+        Consulta consulta = await _mediator.Send(command);
         return consulta;
     }
 

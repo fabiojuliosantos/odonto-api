@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Odonto.API.DTOs.Consultas;
 using Odonto.Application.Interfaces;
+using Odonto.Application.Mediator.Consultas.Commands;
 using Odonto.Domain.Entities;
 
 namespace Odonto.API.Controllers;
@@ -51,11 +52,13 @@ public class ConsultasController : ControllerBase
     /// <param name="id">ID da consulta que será buscada</param>
     /// <returns>Retorna o objeto da consulta</returns>
     [HttpGet("buscar-consulta-id/{id}")]
-    public async Task<ActionResult<ConsultasDTO>> BuscarConsultaPorId(int id)
+    public async Task<ActionResult> BuscarConsultaPorId(int id)
     {
         try
         {
-            var consulta = await _service.BuscarConsultaPorIdAsync(id);
+            BuscarConsultaPorIdCommand command = new BuscarConsultaPorIdCommand() { ConsultaId = id};
+
+            Consulta consulta = await _service.BuscarConsultaPorIdAsync(command);
             
             if (consulta is null)
             {
@@ -66,10 +69,8 @@ public class ConsultasController : ControllerBase
                     Detail = "Consulta com o ID especificado não foi encontrada."
                 });
             }
-
-            var consultaDto = _mapper.Map<ConsultasDTO>(consulta);
             
-            return Ok(consultaDto);
+            return Ok(consulta);
         }
         catch (Exception ex)
         {
@@ -91,11 +92,11 @@ public class ConsultasController : ControllerBase
     /// <returns>Retorna o objeto da consulta cadastrada</returns>
     [HttpPost("cadastrar-consulta")]
     [Authorize]
-    public ActionResult<ConsultasCadastroDTO> CadastrarConsulta(ConsultasCadastroDTO consultaDto)
+    public async Task<ActionResult> CadastrarConsulta(CadastrarConsultaCommand command)
     {
         try
         {
-            if(consultaDto is null)
+            if(command is null)
             {
                 return NotFound(new ProblemDetails
                 {
@@ -104,9 +105,7 @@ public class ConsultasController : ControllerBase
                     Detail = "Os dados da consulta não foram fornecidos"
                 });
             }
-            var consulta = _mapper.Map<Consulta>(consultaDto);
-
-            _service.CadastrarConsulta(consulta);
+            Consulta consulta = await _service.CadastrarConsulta(command);
 
             return Ok(consulta);
         }
@@ -132,12 +131,9 @@ public class ConsultasController : ControllerBase
     [HttpPut("atualizar-consulta")]
     [Authorize(Policy = "Admin")]
 
-    public ActionResult<ConsultasDTO> AtualizarConsulta(ConsultasDTO consultaDto)
+    public async Task<ActionResult> AtualizarConsulta(AtualizarConsultaCommand command)
     {
-
-        var consulta = _mapper.Map<Consulta>(consultaDto);
-
-        _service.AtualizarConsulta(consulta);
+        Consulta consulta = await _service.AtualizarConsulta(command);
 
         return Ok(consulta);
     }
@@ -153,11 +149,11 @@ public class ConsultasController : ControllerBase
     [HttpDelete("excluir-consulta")]
     [Authorize(Policy = "Admin")]
 
-    public ActionResult<ConsultasDTO> ExcluirConsulta(int id)
+    public async Task<ActionResult> ExcluirConsulta(int id)
     {
-        //var consulta = _mapper.Map<Consulta>(consultaDto);
+        ExcluirConsultaCommand command = new ExcluirConsultaCommand() { ConsultaId = id };
 
-        _service.ExcluirConsulta(id);
+        await _service.ExcluirConsulta(command);
 
         return Ok($"Consulta {id} excluída com sucesso!");
     }

@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Odonto.Domain.Entities;
 
@@ -12,25 +10,13 @@ public class Paciente
     }
 
     public int PacienteId { get; set; }
-    
-    #region Informacoes Basicas
-    [Required] [StringLength(100)] public string Nome { get; set; }
-    [Required] [Column(TypeName = "Date")] public DateTime DataNascimento { get; set; }
-    
-    #endregion Informacoes Basicas
-    
-    #region Contato
-    [StringLength(80)] public string Email { get; set; }
-    [StringLength(11)] public string Telefone { get; set; }
-    #endregion Contato
-    
-    #region Endereco
-    [StringLength(8)]public string Cep { get; set; }
-    [StringLength(110)]public string Logradouro { get; set; }
-    [StringLength(110)]public string Bairro { get; set; }
+    public string Nome { get; set; }
+    public string Cpf { get; set; }
+    public string Email { get; set; }
+    public string Telefone { get; set; }
+    public string Cep { get; set; }
+    public string Logradouro { get; set; }
     public int NumeroCasa { get; set; }
-    
-    #endregion Endereco
-    
-    public ICollection<Consulta>? Consultas { get; set; }
+    public IEnumerable<Consulta>? Consultas { get; set; }
+    public IEnumerable<Documento>? Documentos { get; set; }
 }

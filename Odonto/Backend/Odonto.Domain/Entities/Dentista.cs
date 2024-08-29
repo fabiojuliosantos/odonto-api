@@ -5,19 +5,12 @@ namespace Odonto.Domain.Entities;
 
 public class Dentista
 {
-    public Dentista()
-    {
-        Consultas = new Collection<Consulta>();
-    }
-
     public int DentistaId { get; set; }
-
-    [Required] [StringLength(100)] public string Nome { get; set; }
-
-    [StringLength(80)] public string Email { get; set; }
-
-    [StringLength(11)] public string Telefone { get; set; }
-
-    public ICollection<Consulta>? Consultas { get; set; }
+    public string Nome { get; set; }
+    public string Email { get; set; }
+    public string Telefone { get; set; }
+    public string Cro { get; set; }
+    public IEnumerable<Consulta>? Consultas { get; set; }
+    public IEnumerable<Documento>? Documentos { get; set; }
 
 }

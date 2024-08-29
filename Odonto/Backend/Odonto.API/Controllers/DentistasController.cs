@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Odonto.API.AuthenticationFilter;
-using Odonto.API.DTOs.Dentistas;
 using Odonto.Application.Interfaces;
+using Odonto.Application.Mediator.Dentistas.Commands;
 using Odonto.Domain.Entities;
 
 namespace Odonto.API.Controllers;
@@ -17,7 +16,7 @@ public class DentistasController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IDentistaService _service;
 
-    public DentistasController(IDentistaService service, 
+    public DentistasController(IDentistaService service,
                                IMapper mapper)
     {
         _service = service;
@@ -41,9 +40,10 @@ public class DentistasController : ControllerBase
     /// <param name="id">ID do dentista que irá buscar</param>
     /// <returns>Retorna o objeto do dentista encontrado</returns>
     [HttpGet("buscar-dentista-id/{id}")]
-    public async Task<ActionResult<Dentista>> BuscarDentistaPorId(int id)
+    public async Task<ActionResult> BuscarDentistaPorId(int id)
     {
-        var dentista = await _service.BuscarPorIdAsync(id);
+        BuscarDentistaPorIdCommand command = new BuscarDentistaPorIdCommand() { DentistaId = id };
+        Dentista dentista = await _service.BuscarPorIdAsync(command);
         return Ok(dentista);
     }
 
@@ -55,12 +55,11 @@ public class DentistasController : ControllerBase
     /// <exception cref="Exception"></exception>
     [HttpPost("cadastrar-dentista")]
     [Authorize]
-    public ActionResult<DentistasCadastroDTO> CadastrarDentista(DentistasCadastroDTO dentistaDto)
+    public async Task<ActionResult> CadastrarDentista(CadastrarDentistaCommand command)
     {
         try
         {
-            var dentista = _mapper.Map<Dentista>(dentistaDto);
-            _service.CadastrarDentista(dentista);
+            Dentista dentista = await _service.CadastrarDentista(command);
             return Ok(dentista);
         }
         catch (Exception)
@@ -77,11 +76,9 @@ public class DentistasController : ControllerBase
     /// <exception cref="Exception"></exception>
     [HttpPut("atualizar-dentista")]
     [Authorize]
-    public ActionResult<DentistasDTO> AtualizarDentista(DentistasDTO dentistaDto)
+    public async Task<ActionResult> AtualizarDentista(AtualizarDentistaCommand command)
     {
-        var dentista = _mapper.Map<Dentista>(dentistaDto);
-
-        _service.AtualizarDentista(dentista);
+        Dentista dentista = await _service.AtualizarDentista(command);
 
         return Ok(dentista);
     }
@@ -94,9 +91,9 @@ public class DentistasController : ControllerBase
     /// <exception cref="Exception"></exception>
     [HttpDelete("excluir-dentista")]
     [Authorize]
-    public ActionResult<Dentista> ExcluirDentista(Dentista dentista)
+    public async Task<ActionResult> ExcluirDentista(ExcluirDentistaCommand command)
     {
-        _service.ExcluirDentista(dentista);
+        Dentista dentista = await _service.ExcluirDentista(command);
         return Ok(dentista);
     }
 }

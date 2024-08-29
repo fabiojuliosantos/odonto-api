@@ -1,38 +1,60 @@
-﻿using Odonto.Application.Interfaces;
+﻿using MediatR;
+using Odonto.Application.Interfaces;
+using Odonto.Application.Mediator.Dentistas.Commands;
 using Odonto.Domain.Entities;
-using Odonto.Infra.Interfaces;
 
 namespace Odonto.Application.Services;
 
 public class DentistaService : IDentistaService
 {
-    private readonly IDentistaRepository _repository;
-    public DentistaService(IDentistaRepository repository)
+    private readonly IMediator _mediator;
+
+    public DentistaService(IMediator mediator)
     {
-        _repository = repository;
-    }
-    public Dentista AtualizarDentista(Dentista dentista)
-    {
-        throw new NotImplementedException();
+        _mediator = mediator;
     }
 
-    public Task<Dentista> BuscarPorIdAsync(int id)
+    public async Task<Dentista> AtualizarDentista(AtualizarDentistaCommand command)
     {
-        throw new NotImplementedException();
+        try
+        {
+            if (command is null) throw new Exception("Não foram informados dados para o(a) Dentista!");
+            return await _mediator.Send(command);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
-    public Task<IEnumerable<Dentista>> BuscarTodosDentistasAsync()
+    public async Task<Dentista> BuscarPorIdAsync(BuscarDentistaPorIdCommand command)
     {
-        throw new NotImplementedException();
+        try
+        {
+            if (command.DentistaId < 0) throw new Exception("Valor de id informado é inválido!");
+            return await _mediator.Send(command);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
-    public Dentista CadastrarDentista(Dentista dentista)
+    public async Task<IEnumerable<Dentista>> BuscarTodosDentistasAsync()
     {
-        throw new NotImplementedException();
+        BuscarTodosDentistasCommand command = new BuscarTodosDentistasCommand();
+        return await _mediator.Send(command);
     }
 
-    public Dentista ExcluirDentista(Dentista dentista)
+    public async Task<Dentista> CadastrarDentista(CadastrarDentistaCommand command)
     {
-        throw new NotImplementedException();
+        if(command is null) throw new Exception("Não foram informados dados para o(a) dentista!");        
+        return await _mediator.Send(command);
+    }
+
+    public async Task<Dentista> ExcluirDentista(ExcluirDentistaCommand command)
+    {
+        if (command.DentistaId < 1) throw new Exception("Valor informado para o id é inválido!");
+        return await _mediator.Send(command);
     }
 }

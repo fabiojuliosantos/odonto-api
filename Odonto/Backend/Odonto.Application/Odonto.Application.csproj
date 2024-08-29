@@ -16,7 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Mediator\Dentistas\" />
       <Folder Include="Mediator\Consultas\" />
       <Folder Include="Mediator\Documentos\" />
     </ItemGroup>

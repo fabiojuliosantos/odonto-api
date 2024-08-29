@@ -2,9 +2,6 @@
 using Odonto.Application.Interfaces;
 using Odonto.Application.Mediator.Consultas.Commands;
 using Odonto.Domain.Entities;
-using Odonto.Domain.Pagination;
-using Odonto.Infra.Interfaces;
-using X.PagedList;
 
 namespace Odonto.Application.Services;
 
@@ -16,7 +13,6 @@ public class ConsultaService : IConsultaService
     {
         _mediator = mediator;
     }
-
 
     #region Cadastrar
 
@@ -68,7 +64,7 @@ public class ConsultaService : IConsultaService
 
     public async Task<IEnumerable<Consulta>> BuscarTodasConsultasAsync()
     {
-        BuscarTodasConsultasCommand command  = new BuscarTodasConsultasCommand();
+        BuscarTodasConsultasCommand command = new BuscarTodasConsultasCommand();
         IEnumerable<Consulta> consultas = await _mediator.Send(command);
         return consultas;
     }

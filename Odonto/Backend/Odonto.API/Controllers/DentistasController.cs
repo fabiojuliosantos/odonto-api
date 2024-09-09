@@ -34,6 +34,12 @@ public class DentistasController : ControllerBase
         return Ok(dentistas);
     }
 
+    [HttpGet("teste")]
+    public async Task<ActionResult> Teste()
+    {
+        return Ok("Funcionou!");
+    }
+
     /// <summary>
     /// Busca um dentista específico pelo ID
     /// </summary>
@@ -54,7 +60,6 @@ public class DentistasController : ControllerBase
     /// <returns>Retorna o objeto do dentista cadastrado</returns>
     /// <exception cref="Exception"></exception>
     [HttpPost("cadastrar-dentista")]
-    [Authorize]
     public async Task<ActionResult> CadastrarDentista(CadastrarDentistaCommand command)
     {
         try

@@ -87,7 +87,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IPacienteRepository, PacienteRepository>();
         services.AddScoped<IDentistaRepository, DentistaRepository>();
         services.AddScoped<IConsultaRepository, ConsultaRepository>();
-
+        services.AddScoped<IDocumentosRepository, DocumentosRepository>();
         #endregion repositories 
 
         #region services
@@ -95,6 +95,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IPacienteService, PacienteService>();
         services.AddScoped<IDentistaService, DentistaService>();
         services.AddScoped<IConsultaService, ConsultaService>();
+        services.AddScoped<IDocumentosService, DocumentoService>();
         services.AddScoped<ITokenService, TokenService>();
 
         #endregion services
@@ -118,6 +119,18 @@ public static class DependecyInjectionConfig
         });
 
         #endregion Authorization
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAllOrigins",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+        });
+
 
         return services;
     }

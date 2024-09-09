@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  apiodonto:
+    container_name: odontoApi
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        API_PROJECT: "Odonto.API"
+    ports:
+      - 8080:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development 
+    depends_on: ["odonto-api-sql"]
+    networks:
+      - odonto-networks
+
+  odonto-api-sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - "ACCEPT_EULA=1"
+      - "MSSQL_SA_PASSWORD=Odonto@dm1n"
+    volumes:
+      - "odonto-api-volumes:/var/opt/mssql"
+    ports:
+      - 1433:1433
+    networks:
+      odonto-networks:
+        aliases:
+          - "sql"
+
+volumes:
+  odonto-api-volumes:
+
+networks:
+  odonto-networks:
+    driver: bridge

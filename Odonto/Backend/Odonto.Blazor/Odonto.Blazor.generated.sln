@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odonto.Blazor", "Odonto.Blazor.csproj", "{A0959B09-DA1B-4FD4-BB85-6EA8D8286609}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A0959B09-DA1B-4FD4-BB85-6EA8D8286609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0959B09-DA1B-4FD4-BB85-6EA8D8286609}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0959B09-DA1B-4FD4-BB85-6EA8D8286609}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0959B09-DA1B-4FD4-BB85-6EA8D8286609}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {543C6A5E-7603-4FAB-9AF5-629CCE5F54B0}
+	EndGlobalSection
+EndGlobal

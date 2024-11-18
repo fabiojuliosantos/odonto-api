@@ -1,4 +1,6 @@
+using Blazored.LocalStorage;
 using Odonto.Blazor.Components;
+using Odonto.Blazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +8,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddBlazorBootstrap();
+builder.Services.AddHttpClient(); // Adiciona o HttpClient para requisições HTTP
+builder.Services.AddBlazoredLocalStorage(); // Adiciona o Blazored.LocalStorage
+builder.Services.AddScoped<LoginService>(); // Registra o LoginService
+builder.Services.AddScoped<PacientesService>();//Registra o PacientesService
+
+
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7061") });
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

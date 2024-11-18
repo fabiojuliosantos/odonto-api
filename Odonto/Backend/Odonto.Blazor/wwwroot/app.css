@@ -1,5 +1,8 @@
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    background-color: #dfe6e9
 }
 
 a, .btn-link {
@@ -13,7 +16,7 @@ a, .btn-link {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 .content {
@@ -48,4 +51,126 @@ h1:focus {
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
+}
+
+.navbar-banner {
+    width: 170px; /* Ajuste o tamanho conforme necessário */
+    height: 45px; /* Mantém a proporção da imagem */
+}
+
+.top-row {
+    position: fixed; /* Fixa o banner no topo */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Garante que o banner fique acima de outros elementos */
+}
+
+.nav-scrollable {
+    margin-top: 60px; /* Adiciona espaço suficiente para o banner fixo */
+}
+
+.navbar-toggler {
+    display: none; /* Esconde o botão do menu se não for necessário */
+}
+
+.login-container {
+    padding: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+/* Estilo do formulário */
+.login-form {
+    color: #dfe6e9;
+    background-color: #2c3e50;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Estilo para o logo */
+.logo {
+    display: block;
+    margin: 0 auto 1.5rem;
+    width: 200px;
+    height: auto;
+}
+
+/* Estilo para os campos de entrada */
+.login-form input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Estilo para o botão */
+.login-form button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+    /* Hover do botão */
+    .login-form button:hover {
+        background-color: #3498db;
+    }
+
+.toast {
+    display: none;
+    padding: 1.5rem;
+    color: #fff;
+    z-index: 1;
+    position: absolute;
+    width: 25rem;
+    top: 2rem;
+    border-radius: 1rem;
+    left: 50%;
+}
+
+.toast-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 1rem;
+    font-size: 2.5rem;
+}
+
+.toast-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-left: 1rem;
+}
+
+    .toast-body p {
+        margin-bottom: 0;
+    }
+
+.toast-visible {
+    display: flex;
+    flex-direction: row;
+    animation: fadein 1.5s;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }

@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Mediator.Dentistas.Commands;
+using Odonto.Application.Mediator.Dentistas.Queries;
 using Odonto.Domain.Entities;
 
 namespace Odonto.Application.Services;
@@ -56,5 +58,12 @@ public class DentistaService : IDentistaService
     {
         if (command.DentistaId < 1) throw new Exception("Valor informado para o id é inválido!");
         return await _mediator.Send(command);
+    }
+
+    public async Task<Dentista> BuscarDentistaEmail(BuscarDentistasEmailQuery query)
+    {
+        if (query == null) throw new Exception("Dentista não informado!"/*, StatusCodes.Status400BadRequest*/);
+        Dentista dentista = await _mediator.Send(query);
+        return dentista;
     }
 }

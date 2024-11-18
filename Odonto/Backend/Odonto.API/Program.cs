@@ -1,13 +1,6 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Odonto.API.DTOs.Mappings;
-using Odonto.Infra.Context;
-using Odonto.Infra.Identity;
 using Odonto.IoC;
 using Odonto.IoC.Configuration;
-using System.Text;
 using System.Text.Json.Serialization;
 
 #region Variaveis
@@ -61,5 +54,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//app.UseKissLogMiddleware(options => {
+//    options.Listeners.Add(new RequestLogsApiListener(new Application(
+//        builder.Configuration["LogBee.OrganizationId"],
+//        builder.Configuration["LogBee.ApplicationId"])
+//    )
+//    {
+//        ApiUrl = builder.Configuration["LogBee.ApiUrl"]
+//    });
+//});
 
 app.Run();

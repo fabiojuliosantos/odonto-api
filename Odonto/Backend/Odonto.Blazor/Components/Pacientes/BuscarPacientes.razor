@@ -1,0 +1,75 @@
+﻿@using Odonto.Blazor.Services
+@using Odonto.Blazor.Entities
+@using BlazorBootstrap
+
+@page "/pacientes"
+@inject PacientesService service
+@inject LoginService login
+
+<PageTitle>Pacientes</PageTitle>
+
+<h3>Pacientes</h3>
+
+<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+
+@if (pacientesLista == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table table-striped table">
+        <thead class="">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nome</th>
+                <th scope="col">CPF</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">CEP</th>
+                <th scope="col">Logradouro</th>
+                <th scope="col">Número</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var paciente in pacientesLista)
+            {
+                <tr>
+                    <th scope="row">@paciente.PacienteId</th>
+                    <td>@paciente.Nome</td>
+                    <td>@paciente.Cpf</td>
+                    <td>@paciente.Email</td>
+                    <td>@paciente.Telefone</td>
+                    <td>@paciente.Cep</td>
+                    <td>@paciente.Logradouro</td>
+                    <td>@paciente.NumeroCasa</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    private List<Pacientes> pacientesLista;
+    [Inject] protected ToastService ToastService { get; set; } = default!;
+    
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    private void ShowMessage(ToastType toastType) => messages.Add(CreateToastMessage(toastType));
+
+    private ToastMessage CreateToastMessage(ToastType toastType)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Title = "Blazor Bootstrap",
+            HelpText = $"{DateTime.Now}",
+            Message = $"Hello, world! This is a toast message. DateTime: {DateTime.Now}",
+        }; 
+
+    protected override async Task OnInitializedAsync()
+    {
+        ShowMessage(ToastType.Success);
+        pacientesLista = await service.BuscarPacientes();
+    }
+}

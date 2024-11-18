@@ -23,6 +23,7 @@ public class CadastrarConsultaHandler : IRequestHandler<CadastrarConsultaCommand
             DentistaId = request.DentistaId,
             PacienteId = request.PacienteId,
         };
+
         Consulta consultaCadastrada = await _repository.CadastrarConsulta(consulta);
         return consultaCadastrada;
     }

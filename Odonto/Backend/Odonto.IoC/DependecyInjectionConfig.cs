@@ -13,7 +13,6 @@ using Odonto.Infra.Identity;
 using Odonto.Infra.Interfaces;
 using Odonto.Infra.Repositories;
 using System.Data;
-using System.Data.Common;
 using System.Text;
 
 namespace Odonto.IoC;
@@ -65,6 +64,7 @@ public static class DependecyInjectionConfig
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(secretKey))
             };
+
             options.Events = new JwtBearerEvents
             {
                 OnChallenge = context =>
@@ -74,7 +74,7 @@ public static class DependecyInjectionConfig
                     context.Response.ContentType = "application/json";
                     var result = System.Text.Json.JsonSerializer.Serialize(new { message = "Você não está autenticado" });
                     return context.Response.WriteAsync(result);
-                }
+                } 
             };
         });
 

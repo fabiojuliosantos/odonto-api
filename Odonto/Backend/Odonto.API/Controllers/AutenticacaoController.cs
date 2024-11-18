@@ -31,7 +31,7 @@ public class AutenticacaoController : ControllerBase
         _roleManager = roleManager;
         _configuration = configuration;
     }
-    
+
     /// <summary>
     /// Cadastra uma nova role para permissão de acesso dos usuários
     /// </summary>

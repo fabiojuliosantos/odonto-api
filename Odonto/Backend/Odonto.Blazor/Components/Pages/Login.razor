@@ -1,0 +1,58 @@
+﻿@using BlazorBootstrap
+@using Odonto.Blazor.Components.Layout
+@using Odonto.Blazor.Services
+
+@page "/login"
+@layout LoginLayout
+@inject LoginService service
+@inject NavigationManager Navigation
+
+<div class="login-container">
+    <form method="post" @onsubmit="Logar" @formname="formLogin" class="login-form">
+        <AntiforgeryToken />
+        <img src="logo.png" alt="Logo" class="logo" />
+        <div>
+            <label for="username">Usuário:</label>
+            <input type="text" id="username" @bind="username" />
+        </div>
+        <div>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" @bind="password" />
+        </div>
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+
+@code {
+    private string username = string.Empty;
+    private string password = string.Empty;
+    [Inject] protected ToastService ToastService { get; set; } = default!;
+
+    private async Task Logar()
+    {
+        Console.WriteLine("Botão clicado"); // Adicionei um log para verificar o clique
+
+        var success = await service.Logar(username, password);
+
+        if (success != "erro")
+        {
+            // Redireciona para a página inicial após login
+            Console.WriteLine($"Token = {success}");
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            // Exibe uma mensagem de erro ou trata de outra forma
+            ToastService.Notify(new(ToastType.Danger, $"Error: Credenciais inválidas!"));
+            Console.WriteLine("Erro ao fazer login.");
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await service.ArmazenarTokenAsync();
+        }
+    }
+}

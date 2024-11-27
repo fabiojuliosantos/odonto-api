@@ -20,12 +20,14 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
         <PackageReference Include="Serilog.Sinks.LogBee.AspNetCore" Version="1.0.3" />
         <PackageReference Include="X.PagedList.Mvc.Core" Version="9.1.2" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Odonto.IoC\Odonto.IoC.csproj" />
+      <ProjectReference Include="..\Odonto.MessageBus\Odonto.MessageBus.csproj" />
     </ItemGroup>
 
     <ItemGroup>

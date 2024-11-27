@@ -18,7 +18,7 @@ public class DocumentosRepository : IDocumentosRepository
     {
         try
         {
-            string sql = @"INSERT INTO DOCUMENTOS(TIPODOCUMENTO, DATAEMISSAO, DENTISTAID, PACIENTEID, NOMEARQUIVO)
+            string sql = @"INSERT INTO DOCUMENTOS(TIPODOCUMENTO, DATAEMISSAO, DENTISTAID, PACIENTEID, NOMEDOCUMENTO)
                            VALUES(@TIPODOCUMENTO, @DATAEMISSAO, @DENTISTAID, @PACIENTEID, @NOMEARQUIVO)";
 
             object parametros = new

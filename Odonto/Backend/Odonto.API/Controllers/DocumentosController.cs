@@ -53,6 +53,7 @@ public class DocumentosController : ControllerBase
 
             byte[] receitaDocumento = await _service.GerarReceita(receita, usuario);
 
+            _logger.LogTrace("Atestado gerado!");
             return Ok(receitaDocumento);
         }
         catch (CustomException ex)

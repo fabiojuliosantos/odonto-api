@@ -20,7 +20,7 @@ public class AutenticacaoController : ControllerBase
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
-
+    private readonly ILogger<AutenticacaoController> _logger;
     public AutenticacaoController(ITokenService tokenService,
                                   UserManager<AppUser> userManager,
                                   RoleManager<IdentityRole> roleManager,
@@ -48,6 +48,7 @@ public class AutenticacaoController : ControllerBase
 
             if (roleResult.Succeeded)
             {
+                _logger.LogInformation($"Role{rolename} criada!");
                 return StatusCode(StatusCodes.Status200OK,
                     new Response
                     {
@@ -57,6 +58,7 @@ public class AutenticacaoController : ControllerBase
             }
             else
             {
+                _logger.LogError($"Ocorreu um erro ao adicionar a role: {rolename}");
                 return StatusCode(StatusCodes.Status400BadRequest, new Response
                 {
                     Status = "Error",
@@ -65,6 +67,7 @@ public class AutenticacaoController : ControllerBase
             }
         }
 
+        _logger.LogError($"Role: {rolename} já existente.");
         return StatusCode(StatusCodes.Status400BadRequest, new Response
         {
             Status = "Error",

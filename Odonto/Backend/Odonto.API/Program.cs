@@ -1,6 +1,10 @@
 using Odonto.API.DTOs.Mappings;
 using Odonto.IoC;
 using Odonto.IoC.Configuration;
+using QuestPDF.Infrastructure;
+using Serilog;
+using Serilog.Sinks.LogBee;
+using Serilog.Sinks.LogBee.AspNetCore;
 using System.Text.Json.Serialization;
 
 #region Variaveis
@@ -15,16 +19,27 @@ var builder = WebApplication.CreateBuilder(args);
 #region Configuracao Roles
 
 builder.Services.ResolveDependecies(builder.Configuration);
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions
         .ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 #endregion Configuracao Roles
 
-#region Injecao de Dependencia
+#region Configuracao LogBee
+builder.Services.AddSerilog((services, lc) => lc
+    .WriteTo.LogBee(new LogBeeApiKey(
+            builder.Configuration["LogBee.OrganizationId"]!,
+            builder.Configuration["LogBee.ApplicationId"]!,
+            builder.Configuration["LogBee.ApiUrl"]!
+        ),
+        services
+    ));
+#endregion Configuracao LogBee
 
-#endregion Injecao de Dependencia
+#region QuestPDF
+QuestPDF.Settings.License = LicenseType.Community;
+#endregion QuestPDF
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(OdontoDTOMappingProfile));
@@ -64,5 +79,6 @@ app.MapControllers();
 //        ApiUrl = builder.Configuration["LogBee.ApiUrl"]
 //    });
 //});
+app.UseLogBeeMiddleware();
 
 app.Run();

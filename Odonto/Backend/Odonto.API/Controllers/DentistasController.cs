@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Mediator.Dentistas.Commands;
 using Odonto.Domain.Entities;
+using Odonto.Application.TratarErros;
+
 
 namespace Odonto.API.Controllers;
 
@@ -15,12 +17,14 @@ public class DentistasController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IDentistaService _service;
-
+    private readonly ILogger<DentistasController> _logger;
     public DentistasController(IDentistaService service,
-                               IMapper mapper)
+                               IMapper mapper,
+                               ILogger<DentistasController> logger)
     {
         _service = service;
         _mapper = mapper;
+        _logger = logger;
     }
 
     /// <summary>
@@ -30,14 +34,16 @@ public class DentistasController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Dentista>>> BuscarTodosDentistas()
     {
-        var dentistas = await _service.BuscarTodosDentistasAsync();
-        return Ok(dentistas);
-    }
-
-    [HttpGet("teste")]
-    public async Task<ActionResult> Teste()
-    {
-        return Ok("Funcionou!");
+        try
+        {
+            var dentistas = await _service.BuscarTodosDentistasAsync();
+            return Ok(dentistas);
+        }
+        catch (CustomException ex) 
+        {
+            _logger.LogError(ex.StatusCode, ex.Message);
+            return StatusCode(ex.StatusCode, new { message = ex.Message });
+        }
     }
 
     /// <summary>
@@ -45,12 +51,20 @@ public class DentistasController : ControllerBase
     /// </summary>
     /// <param name="id">ID do dentista que irá buscar</param>
     /// <returns>Retorna o objeto do dentista encontrado</returns>
-    [HttpGet("buscar-dentista-id/{id}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult> BuscarDentistaPorId(int id)
     {
-        BuscarDentistaPorIdCommand command = new BuscarDentistaPorIdCommand() { DentistaId = id };
-        Dentista dentista = await _service.BuscarPorIdAsync(command);
-        return Ok(dentista);
+        try
+        {
+            BuscarDentistaPorIdCommand command = new BuscarDentistaPorIdCommand() { DentistaId = id };
+            Dentista dentista = await _service.BuscarPorIdAsync(command);
+            return Ok(dentista);
+        }
+        catch (CustomException ex) 
+        {
+            _logger.LogError(ex.StatusCode, ex.Message);
+            return StatusCode(ex.StatusCode, new { message = ex.Message });
+        }
     }
 
     /// <summary>
@@ -59,17 +73,20 @@ public class DentistasController : ControllerBase
     /// <param name="dentistaDto">Objeto do dentista que será cadastrado</param>
     /// <returns>Retorna o objeto do dentista cadastrado</returns>
     /// <exception cref="Exception"></exception>
-    [HttpPost("cadastrar-dentista")]
+    [HttpPost("")]
+    [Authorize]
     public async Task<ActionResult> CadastrarDentista(CadastrarDentistaCommand command)
     {
         try
         {
             Dentista dentista = await _service.CadastrarDentista(command);
+            _logger.LogTrace($"Dentista {dentista.Nome} cadastrado com sucesso!");
             return Ok(dentista);
         }
-        catch (Exception)
+        catch (CustomException ex)
         {
-            throw;
+            _logger.LogError(ex.StatusCode, ex.Message);
+            return StatusCode(ex.StatusCode, new {message = ex.Message});
         }
     }
 
@@ -79,13 +96,21 @@ public class DentistasController : ControllerBase
     /// <param name="dentistaDto">Objeto do dentista que será atualizado</param>
     /// <returns>Retorna o objeto do dentista atualizado</returns>
     /// <exception cref="Exception"></exception>
-    [HttpPut("atualizar-dentista")]
+    [HttpPut("")]
     [Authorize]
     public async Task<ActionResult> AtualizarDentista(AtualizarDentistaCommand command)
     {
-        Dentista dentista = await _service.AtualizarDentista(command);
-
-        return Ok(dentista);
+        try 
+        {
+            Dentista dentista = await _service.AtualizarDentista(command);
+            _logger.LogTrace($"Dentista {dentista.Nome} atualizado com sucesso");
+            return Ok(dentista);
+        }
+        catch (CustomException ex) 
+        {
+            _logger.LogError(ex.StatusCode, ex.Message);
+            return StatusCode(ex.StatusCode, new { message = ex.Message });
+        }
     }
 
     /// <summary>
@@ -94,11 +119,20 @@ public class DentistasController : ControllerBase
     /// <param name="dentistaDto">Objeto do dentista que será deeltado</param>
     /// <returns>Retorna o objeto do dentista deletado</returns>
     /// <exception cref="Exception"></exception>
-    [HttpDelete("excluir-dentista")]
+    [HttpDelete("")]
     [Authorize]
     public async Task<ActionResult> ExcluirDentista(ExcluirDentistaCommand command)
     {
-        Dentista dentista = await _service.ExcluirDentista(command);
-        return Ok(dentista);
+        try
+        {
+            Dentista dentista = await _service.ExcluirDentista(command);
+            _logger.LogTrace($"Dentista {dentista.Nome} excluído com sucesso");
+            return Ok(dentista);
+        }
+        catch(CustomException ex)
+        {
+            _logger.LogError(ex.StatusCode, ex.Message);
+            return StatusCode(ex.StatusCode, new { message = ex.Message });
+        }
     }
 }

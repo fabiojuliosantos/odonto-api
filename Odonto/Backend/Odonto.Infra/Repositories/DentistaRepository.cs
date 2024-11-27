@@ -3,6 +3,7 @@ using Odonto.Domain.Entities;
 using Odonto.Infra.Interfaces;
 using System.Data;
 
+
 namespace Odonto.Infra.Repositories;
 
 public class DentistaRepository : IDentistaRepository
@@ -61,12 +62,23 @@ public class DentistaRepository : IDentistaRepository
 
     public async Task<Dentista> ExcluirDentista(int id)
     {
-        var dentista = new Dentista();
-        var sql = $"DELETE FROM DENTISTAS WHERE DENTISTAID = {id}";
+        try 
+        {
+            var dentista = await BuscarPorId(id);
 
-        await _connection.ExecuteAsync(sql);
+            var sql = $"DELETE FROM DENTISTAS WHERE DENTISTAID = {id}";
 
-        return dentista;
+            var retorno = await _connection.ExecuteAsync(sql);
+
+            if (retorno < 1) { throw new Exception($"Não foi possível excluir o dentista {id}"); }
+        
+            return dentista;
+        }
+        catch(Exception ex) 
+        {
+            throw;
+        }
+
     }
 
     #endregion Excluir
@@ -75,11 +87,23 @@ public class DentistaRepository : IDentistaRepository
 
     public async Task<Dentista> BuscarPorId(int id)
     {
-        var sql = $"SELECT * FROM DENTISTAS WHERE DENTISTAID={id}";
+        Dentista dentista = new Dentista();
+        
+        try
+        {
+            var sql = $"SELECT * FROM DENTISTAS WHERE DENTISTAID={id}";
 
-        var dentista = await _connection.QueryFirstOrDefaultAsync<Dentista>(sql);
+            dentista = await _connection.QueryFirstOrDefaultAsync<Dentista>(sql);
 
-        return dentista;
+            if (dentista is null) throw new Exception("Dentista não encontrado!");
+            
+            return dentista;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+
     }
 
     public async Task<IEnumerable<Dentista>> BuscarTodos()

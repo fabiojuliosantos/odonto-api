@@ -32,8 +32,8 @@ public class DocumentoService : IDocumentosService
         _mediator = mediator;
     }
 
-    Image marcaDagua = LoadImageWithTransparency(@".\Assets\Img\logo.png", 0.25f);
-    string logo = @".\Assets\Img\logo.png";
+    Image marcaDagua = LoadImageWithTransparency(@"C:\odonto-api\Odonto\Backend\Odonto.Application\Assets\Img\logo-peb.png", 0.25f);
+    string logo = @"C:\odonto-api\Odonto\Backend\Odonto.Application\Assets\Img\logo.png";
 
     public async Task<byte[]> GerarAtestado(AtestadoDTO atestado, string email)
     {

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Odonto.API.DTOs.Dentistas;
+using Odonto.API.RabbitMQSender;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Mediator.Dentistas.Commands;
 using Odonto.Domain.Entities;
@@ -18,13 +20,16 @@ public class DentistasController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IDentistaService _service;
     private readonly ILogger<DentistasController> _logger;
+    private readonly IRabbitMQMessageSender _rabbitMqMessageSender;
     public DentistasController(IDentistaService service,
                                IMapper mapper,
-                               ILogger<DentistasController> logger)
+                               ILogger<DentistasController> logger,
+                               IRabbitMQMessageSender rabbitMqMessageSender)
     {
         _service = service;
         _mapper = mapper;
         _logger = logger;
+        _rabbitMqMessageSender = rabbitMqMessageSender;
     }
 
     /// <summary>
@@ -80,6 +85,7 @@ public class DentistasController : ControllerBase
         try
         {
             Dentista dentista = await _service.CadastrarDentista(command);
+            
             _logger.LogTrace($"Dentista {dentista.Nome} cadastrado com sucesso!");
             return Ok(dentista);
         }
@@ -87,6 +93,19 @@ public class DentistasController : ControllerBase
         {
             _logger.LogError(ex.StatusCode, ex.Message);
             return StatusCode(ex.StatusCode, new {message = ex.Message});
+        }
+    }
+    [HttpPost("cadastrar-dentista-fila")]
+    public async Task<ActionResult> CadastrarDentistaFila(DentistasCadastroDTO dentista)
+    {
+        try
+        {
+            _rabbitMqMessageSender.SendMessage(dentista, "cadastroDentista");
+            return Ok(dentista);
+        }
+        catch (CustomException ex)
+        {
+            return StatusCode(ex.StatusCode, ex.Message);
         }
     }
 

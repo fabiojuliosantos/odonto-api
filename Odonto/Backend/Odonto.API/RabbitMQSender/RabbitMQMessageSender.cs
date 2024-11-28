@@ -1,4 +1,7 @@
-﻿using Odonto.MessageBus;
+﻿using System.Text;
+using System.Text.Json;
+using Odonto.API.DTOs.Dentistas;
+using Odonto.MessageBus;
 using RabbitMQ.Client;
 
 namespace Odonto.API.RabbitMQSender;
@@ -27,24 +30,23 @@ public class RabbitMQMessageSender : IRabbitMQMessageSender
         };
 
         _connection = await factory.CreateConnectionAsync();
-        IChannel channel = await _connection.CreateChannelAsync();
+        var channel = await _connection.CreateChannelAsync();
 
         await channel.QueueDeclareAsync(queue: queueName, false, false, false, arguments: null);
 
         byte[] body = GetMessageAsByteArray(message);
-
-        // Remova a especificação do tipo genérico <IBasicProperties> e use null para basicProperties
-        await channel.BasicPublishAsync(
-            exchange: "",  // Aqui é um string vazio se você estiver usando uma fila direta
-            routingKey: queueName,
-            mandatory: false,
-            basicProperties: null,
-            body: body);
+        
+        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: queueName, body: body);
     }
-
 
     private byte[] GetMessageAsByteArray(BaseMessage message)
     {
-        throw new NotImplementedException();
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+        };
+        var json = JsonSerializer.Serialize<DentistasCadastroDTO>((DentistasCadastroDTO)message, options);
+        var body = Encoding.UTF8.GetBytes(json);
+        return body;
     }
 }

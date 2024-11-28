@@ -1,6 +1,8 @@
-﻿namespace Odonto.API.DTOs.Dentistas;
+﻿using Odonto.MessageBus;
 
-public class DentistasCadastroDTO
+namespace Odonto.API.DTOs.Dentistas;
+
+public class DentistasCadastroDTO : BaseMessage
 {
     public string Nome { get; set; }
     public string Email { get; set; }

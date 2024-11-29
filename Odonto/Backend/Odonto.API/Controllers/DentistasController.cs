@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Odonto.API.DTOs.Dentistas;
-using Odonto.API.RabbitMQSender;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Mediator.Dentistas.Commands;
 using Odonto.Domain.Entities;
 using Odonto.Application.TratarErros;
+using Odonto.API.DTO.Dentistas;
 
 
 namespace Odonto.API.Controllers;
@@ -20,11 +19,11 @@ public class DentistasController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IDentistaService _service;
     private readonly ILogger<DentistasController> _logger;
-    private readonly IRabbitMQMessageSender _rabbitMqMessageSender;
+    private readonly IRabbitMqMessageSender _rabbitMqMessageSender;
     public DentistasController(IDentistaService service,
                                IMapper mapper,
                                ILogger<DentistasController> logger,
-                               IRabbitMQMessageSender rabbitMqMessageSender)
+                               IRabbitMqMessageSender rabbitMqMessageSender)
     {
         _service = service;
         _mapper = mapper;
@@ -100,7 +99,8 @@ public class DentistasController : ControllerBase
     {
         try
         {
-            _rabbitMqMessageSender.SendMessage(dentista, "cadastroDentista");
+            await _rabbitMqMessageSender.SendMessage(dentista, "cadastroDentista");
+            
             return Ok(dentista);
         }
         catch (CustomException ex)

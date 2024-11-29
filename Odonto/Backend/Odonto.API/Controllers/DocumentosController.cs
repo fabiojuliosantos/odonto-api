@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Odonto.API.AuthenticationFilter;
 using Odonto.API.DTOs.Documentos;
 using Odonto.Application.Interfaces;
 using Odonto.Application.TratarErros;
@@ -19,7 +20,7 @@ public class DocumentosController : ControllerBase
         _logger = logger;
     }
 
-    [Authorize]
+    [Authorize(Policy = "DentistasEnfermeiros")]
     [HttpPost("gerar-atestado")]
     public async Task<ActionResult> GerarAtestado(AtestadoDTO atestado)
     {
@@ -41,7 +42,7 @@ public class DocumentosController : ControllerBase
         }
     }
 
-    [Authorize]
+    [Authorize(Policy = "DentistasEnfermeiros")]
     [HttpPost("gerar-receita")]
     public async Task<ActionResult> GerarReceita(ReceitaDTO receita)
     {

@@ -90,8 +90,8 @@ public class ConsultasController : ControllerBase
     /// </summary>
     /// <param name="consultaDto">Objeto da consulta que será cadastrada</param>
     /// <returns>Retorna o objeto da consulta cadastrada</returns>
+    [Authorize(Policy = "Secretaria")]
     [HttpPost("cadastrar-consulta")]
-    [Authorize]
     public async Task<ActionResult> CadastrarConsulta(CadastrarConsultaCommand command)
     {
         try

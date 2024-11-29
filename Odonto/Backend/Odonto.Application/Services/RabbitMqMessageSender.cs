@@ -1,19 +1,20 @@
-﻿using System.Text;
-using System.Text.Json;
-using Odonto.API.DTOs.Dentistas;
-using Odonto.MessageBus;
+﻿using Odonto.MessageBus;
 using RabbitMQ.Client;
+using System.Text.Json;
+using System.Text;
+using Odonto.Application.Interfaces;
+using Odonto.API.DTO.Dentistas;
 
-namespace Odonto.API.RabbitMQSender;
+namespace Odonto.Application.Services;
 
-public class RabbitMQMessageSender : IRabbitMQMessageSender
+public class RabbitMqMessageSender : IRabbitMqMessageSender
 {
     private readonly string _hostName;
     private readonly string _password;
     private readonly string _username;
     private IConnection _connection;
 
-    public RabbitMQMessageSender()
+    public RabbitMqMessageSender()
     {
         _hostName = "localhost";
         _password = "guest";
@@ -30,12 +31,13 @@ public class RabbitMQMessageSender : IRabbitMQMessageSender
         };
 
         _connection = await factory.CreateConnectionAsync();
+
         var channel = await _connection.CreateChannelAsync();
 
         await channel.QueueDeclareAsync(queue: queueName, false, false, false, arguments: null);
 
         byte[] body = GetMessageAsByteArray(message);
-        
+
         await channel.BasicPublishAsync(exchange: string.Empty, routingKey: queueName, body: body);
     }
 

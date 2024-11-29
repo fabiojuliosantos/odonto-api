@@ -1,8 +1,8 @@
 ﻿using Odonto.MessageBus;
 
-namespace Odonto.API.RabbitMQSender;
+namespace Odonto.Application.Interfaces;
 
-public interface IRabbitMQMessageSender
+public interface IRabbitMqMessageSender
 {
     Task SendMessage(BaseMessage baseMessage, string queueName);
 }

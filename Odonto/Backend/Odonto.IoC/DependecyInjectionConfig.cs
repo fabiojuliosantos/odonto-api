@@ -97,6 +97,7 @@ public static class DependecyInjectionConfig
         services.AddScoped<IConsultaService, ConsultaService>();
         services.AddScoped<IDocumentosService, DocumentoService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IRabbitMqMessageSender, RabbitMqMessageSender>();
 
         #endregion services
 
@@ -116,6 +117,7 @@ public static class DependecyInjectionConfig
             options.AddPolicy("GerenciaTI", policy => policy.RequireRole("gerenciaTI"));
             options.AddPolicy("Gestao", policy => policy.RequireRole("gerenciaTI", "direcao"));
             options.AddPolicy("DentistasDirecao", policy => policy.RequireRole("dentista", "direcao"));
+            options.AddPolicy("Secretaria", policy => policy.RequireRole("secretaria", "dentista"));
         });
 
         #endregion Authorization

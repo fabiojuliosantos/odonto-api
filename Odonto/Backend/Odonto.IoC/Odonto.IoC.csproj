@@ -14,6 +14,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Odonto.Application\Odonto.Application.csproj" />
       <ProjectReference Include="..\Odonto.Infra\Odonto.Infra.csproj" />
+      <ProjectReference Include="..\Odonto.MessageBus\Odonto.MessageBus.csproj" />
     </ItemGroup>
 
 </Project>

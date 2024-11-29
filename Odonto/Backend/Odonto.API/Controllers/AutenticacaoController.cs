@@ -24,12 +24,14 @@ public class AutenticacaoController : ControllerBase
     public AutenticacaoController(ITokenService tokenService,
                                   UserManager<AppUser> userManager,
                                   RoleManager<IdentityRole> roleManager,
-                                  IConfiguration configuration)
+                                  IConfiguration configuration,
+                                  ILogger<AutenticacaoController> logger)
     {
         _tokenService = tokenService;
         _userManager = userManager;
         _roleManager = roleManager;
         _configuration = configuration;
+        _logger = logger;
     }
 
     /// <summary>
@@ -37,6 +39,7 @@ public class AutenticacaoController : ControllerBase
     /// </summary>
     /// <param name="rolename">Nome da role que será cadastrada</param>
     /// <returns>Retorna uma mensagem de sucesso com a role cadastrada</returns>
+    [Authorize(Policy = "Gestao")]
     [HttpPost("CreateRole")]
     public async Task<IActionResult> CreateRole(string rolename)
     {
@@ -81,6 +84,7 @@ public class AutenticacaoController : ControllerBase
     /// <param name="email">E-mail do usuário que receberá a role</param>
     /// <param name="roleName">Nome da role que será atribuída ao usuário</param>
     /// <returns>retorna uma mensagem de sucesso com o nome do usuário e a role atribuída</returns>
+    [Authorize(Policy = "Gestao")]
     [HttpPost("AddUserToRole")]
     public async Task<IActionResult> AddUserToRole(string email, string roleName)
     {
@@ -242,7 +246,7 @@ public class AutenticacaoController : ControllerBase
     /// </summary>
     /// <param name="username">Nome do usuário que terá o token revogado</param>
     /// <returns>Retorna código 200 sem conteúdo</returns>
-    [Authorize]
+    [Authorize(Policy = "GerenciaTI")]
     [HttpPost("revoke/{username}")]
     public async Task<IActionResult> Revoke(string username)
     {

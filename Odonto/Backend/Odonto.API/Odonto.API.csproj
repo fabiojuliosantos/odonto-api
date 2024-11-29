@@ -26,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Odonto.Application\Odonto.Application.csproj" />
       <ProjectReference Include="..\Odonto.IoC\Odonto.IoC.csproj" />
       <ProjectReference Include="..\Odonto.MessageBus\Odonto.MessageBus.csproj" />
     </ItemGroup>

@@ -72,6 +72,7 @@ public class PacientesController : ControllerBase
     /// </summary>
     /// <param name="command">Dados para cadastro do novo paciente</param>
     /// <returns>Retorna os dados do paciente cadastrado</returns>
+    [Authorize(Policy = "Secretaria")]
     [HttpPost("cadastrar-paciente")] //Comando pois altera os estados
     public async Task<ActionResult> CadastrarPaciente(CadastrarPacienteCommand command)
     {
@@ -89,7 +90,7 @@ public class PacientesController : ControllerBase
     /// </summary>
     /// <param name="pacienteDto">Objeto do Paciente</param>
     /// <returns>Retorna o objeto do paciente</returns>
-    [Authorize]
+    [Authorize(Policy = "Secretaria")]
     [HttpPut("atualizar-paciente")]
     public async Task<ActionResult>  AtualizarPaciente(AtualizarPacienteCommand command)
     {
@@ -106,7 +107,7 @@ public class PacientesController : ControllerBase
     /// </summary>
     /// <param name="pacienteDto">Objeto do Paciente</param>
     /// <returns>Retorna o objeto do paciente</returns>
-    [Authorize]
+    [Authorize(Policy = "Secretaria")]
     [HttpDelete("excluir-paciente/")]
     public async Task<ActionResult<PacientesDTO>> ExcluirPacienteAsync(ExcluirPacienteCommand command)
     {

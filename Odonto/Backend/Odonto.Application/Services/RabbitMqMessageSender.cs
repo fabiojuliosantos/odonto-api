@@ -3,7 +3,9 @@ using RabbitMQ.Client;
 using System.Text.Json;
 using System.Text;
 using Odonto.Application.Interfaces;
+using Odonto.Application.Mediator.Documentos.Commands;
 using Odonto.API.DTO.Dentistas;
+using Odonto.Application.DTO;
 
 namespace Odonto.Application.Services;
 
@@ -47,8 +49,9 @@ public class RabbitMqMessageSender : IRabbitMqMessageSender
         {
             WriteIndented = true,
         };
-        var json = JsonSerializer.Serialize<DentistasCadastroDTO>((DentistasCadastroDTO)message, options);
+        var json = JsonSerializer.Serialize<CadastrarConsultaDTO>((CadastrarConsultaDTO)message, options);
         var body = Encoding.UTF8.GetBytes(json);
         return body;
     }
+
 }

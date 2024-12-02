@@ -97,8 +97,8 @@ public static class DependecyInjectionConfig
         services.AddScoped<IConsultaService, ConsultaService>();
         services.AddScoped<IDocumentosService, DocumentoService>();
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IRabbitMqMessageSender, RabbitMqMessageSender>();
-
+        services.AddSingleton<IRabbitMqMessageSender, RabbitMqMessageSender>();
+        services.AddHostedService<RabbitMqMessageConsumer>();
         #endregion services
 
         #region Mediatr

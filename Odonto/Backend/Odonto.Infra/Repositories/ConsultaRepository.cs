@@ -62,20 +62,27 @@ public class ConsultaRepository : IConsultaRepository
 
     public async Task<Consulta> CadastrarConsulta(Consulta consulta)
     {
-        var sql = @"INSERT INTO CONSULTAS(DESCRICAO,DATACONSULTA,DENTISTAID,PACIENTEID)
-                           VALUES(@DESCRICAO,@DATACONSULTA,@DENTISTAID,@PACIENTEID)";
-
-        object parametros = new
+        try
         {
-            DESCRICAO = consulta.Descricao,
-            DATACONSULTA = consulta.DataConsulta,
-            DENTISTAID = consulta.DentistaId,
-            PACIENTEID = consulta.PacienteId
-        };
+            var sql = @"INSERT INTO CONSULTAS(DESCRICAO,DATACONSULTA,DENTISTAID,PACIENTEID)
+                               VALUES(@DESCRICAO,@DATACONSULTA,@DENTISTAID,@PACIENTEID)";
 
-        var cadastro = await _connection.ExecuteAsync(sql, parametros);
-        if (cadastro > 0) return consulta;
-        return null;
+            object parametros = new
+            {
+                DESCRICAO = consulta.Descricao,
+                DATACONSULTA = consulta.DataConsulta,
+                DENTISTAID = consulta.DentistaId,
+                PACIENTEID = consulta.PacienteId
+            };
+
+            var cadastro = await _connection.ExecuteAsync(sql, parametros);
+            if (cadastro > 0) return consulta;
+            return null;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<Consulta> ExcluirConsulta(int id)

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Odonto.API.DTOs.Consultas;
+using Odonto.Application.DTO;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Mediator.Consultas.Commands;
 using Odonto.Domain.Entities;
@@ -18,15 +19,19 @@ public class ConsultasController : ControllerBase
 
     private readonly IMapper _mapper;
     private readonly IConsultaService _service;
+    private readonly IRabbitMqMessageSender _rabbitMqMessageSender;
+
 
     #endregion MEMBROS
 
     #region CONSTRUTOR
     public ConsultasController(IConsultaService service,
-                               IMapper mapper)
+                               IMapper mapper,
+                               IRabbitMqMessageSender rabbitMqMessageSender)
     {
         _service = service;
         _mapper = mapper;
+        _rabbitMqMessageSender = rabbitMqMessageSender;
     }
 
     #endregion CONSTRUTOR
@@ -90,13 +95,13 @@ public class ConsultasController : ControllerBase
     /// </summary>
     /// <param name="consultaDto">Objeto da consulta que será cadastrada</param>
     /// <returns>Retorna o objeto da consulta cadastrada</returns>
-    [Authorize(Policy = "Secretaria")]
+    //[Authorize(Policy = "Secretaria")]
     [HttpPost("cadastrar-consulta")]
-    public async Task<ActionResult> CadastrarConsulta(CadastrarConsultaCommand command)
+    public async Task<ActionResult> CadastrarConsulta(CadastrarConsultaDTO dto)
     {
         try
         {
-            if(command is null)
+            if(dto is null)
             {
                 return NotFound(new ProblemDetails
                 {
@@ -105,9 +110,10 @@ public class ConsultasController : ControllerBase
                     Detail = "Os dados da consulta não foram fornecidos"
                 });
             }
-            Consulta consulta = await _service.CadastrarConsulta(command);
 
-            return Ok(consulta);
+            await _rabbitMqMessageSender.SendMessage(dto, "marcarConsulta");
+
+            return Ok("Consulta Marcada com sucesso!");
         }
         catch (Exception ex) 
         {

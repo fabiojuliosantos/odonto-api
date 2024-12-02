@@ -94,20 +94,6 @@ public class DentistasController : ControllerBase
             return StatusCode(ex.StatusCode, new {message = ex.Message});
         }
     }
-    [HttpPost("cadastrar-dentista-fila")]
-    public async Task<ActionResult> CadastrarDentistaFila(DentistasCadastroDTO dentista)
-    {
-        try
-        {
-            await _rabbitMqMessageSender.SendMessage(dentista, "cadastroDentista");
-            
-            return Ok(dentista);
-        }
-        catch (CustomException ex)
-        {
-            return StatusCode(ex.StatusCode, ex.Message);
-        }
-    }
 
     /// <summary>
     /// Atualiza um dentista específico [Endpoint Protegido]

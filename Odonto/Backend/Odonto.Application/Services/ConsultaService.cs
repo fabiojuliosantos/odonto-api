@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Odonto.Application.DTO;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Mediator.Consultas.Commands;
 using Odonto.Domain.Entities;
@@ -16,11 +17,19 @@ public class ConsultaService : IConsultaService
 
     #region Cadastrar
 
-    public async Task<Consulta> CadastrarConsulta(CadastrarConsultaCommand command)
+    public async Task<Consulta> CadastrarConsulta(CadastrarConsultaDTO dto)
     {
-        if (command is null) throw new Exception("Dados para consulta não foram informados!");
+        if (dto is null) throw new Exception("Dados para consulta não foram informados!");
 
-        Consulta consulta = await _mediator.Send(command);
+        CadastrarConsultaCommand consultaObjeto = new CadastrarConsultaCommand 
+        {
+            DataConsulta = dto.DataConsulta,
+            DentistaId = dto.DentistaId,
+            PacienteId = dto.PacienteId,
+            Descricao = dto.Descricao
+        };
+
+        Consulta consulta = await _mediator.Send(consultaObjeto);
 
         return consulta;
     }

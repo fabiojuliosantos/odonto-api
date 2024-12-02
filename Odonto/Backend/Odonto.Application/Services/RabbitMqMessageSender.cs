@@ -1,11 +1,9 @@
-﻿using Odonto.MessageBus;
-using RabbitMQ.Client;
-using System.Text.Json;
-using System.Text;
+﻿using Odonto.Application.DTO;
 using Odonto.Application.Interfaces;
-using Odonto.Application.Mediator.Documentos.Commands;
-using Odonto.API.DTO.Dentistas;
-using Odonto.Application.DTO;
+using Odonto.MessageBus;
+using RabbitMQ.Client;
+using System.Text;
+using System.Text.Json;
 
 namespace Odonto.Application.Services;
 

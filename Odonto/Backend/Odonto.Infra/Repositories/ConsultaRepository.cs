@@ -65,7 +65,7 @@ public class ConsultaRepository : IConsultaRepository
         try
         {
             var sql = @"INSERT INTO CONSULTAS(DESCRICAO,DATACONSULTA,DENTISTAID,PACIENTEID)
-                               VALUES(@DESCRICAO,@DATACONSULTA,@DENTISTAID,@PACIENTEID)";
+                                   VALUES(@DESCRICAO,@DATACONSULTA,@DENTISTAID,@PACIENTEID)";
 
             object parametros = new
             {

@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Odonto.API.DTOs.Documentos;
-using Odonto.Application.Documentos;
 using Odonto.Application.Enum;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Mediator.Dentistas.Queries;
@@ -35,10 +34,10 @@ public class DocumentoService : IDocumentosService
     Image marcaDagua = LoadImageWithTransparency(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Img", "logo-peb.png"), 0.25f);
     string logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Img", "logo.png");
 
-    public async Task<byte[]> GerarAtestado(AtestadoDTO atestado, string email)
+    public async Task<byte[]> GerarAtestado(AtestadoDTO atestado)
     {
         BuscarPacientePorIdCommand query = new BuscarPacientePorIdCommand() { PacienteId = atestado.pacienteId };
-        BuscarDentistasEmailQuery dentistaQuery = new BuscarDentistasEmailQuery() { DentistaEmail = email };
+        BuscarDentistasEmailQuery dentistaQuery = new BuscarDentistasEmailQuery() { DentistaEmail = atestado.Usuario };
 
         int mesAtual = DateTime.Now.Month;
         MesesEnum mesEnum = (MesesEnum)mesAtual;
@@ -141,12 +140,12 @@ public class DocumentoService : IDocumentosService
         return pdfBytes;
     }
 
-    public async Task<byte[]> GerarReceita(ReceitaDTO receita, string email)
+    public async Task<byte[]> GerarReceita(ReceitaDTO receita)
     {
         try
         {
             BuscarPacientePorIdCommand query = new BuscarPacientePorIdCommand() { PacienteId = receita.PacienteId };
-            BuscarDentistasEmailQuery dentistaQuery = new BuscarDentistasEmailQuery() { DentistaEmail = email };
+            BuscarDentistasEmailQuery dentistaQuery = new BuscarDentistasEmailQuery() { DentistaEmail = receita.Usuario };
 
             Paciente infoPaciente = new Paciente();
             Dentista infoDentista = new Dentista();

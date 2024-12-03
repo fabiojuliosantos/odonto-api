@@ -1,7 +1,10 @@
-﻿namespace Odonto.API.DTOs.Documentos;
+﻿using Odonto.MessageBus;
 
-public class ReceitaDTO
+namespace Odonto.API.DTOs.Documentos;
+
+public class ReceitaDTO : BaseMessage
 {
+    public string? Usuario { get; set; }
     public int PacienteId { get; set; }
     public List<Medicamento> Medicamentos { get; set; }
 }

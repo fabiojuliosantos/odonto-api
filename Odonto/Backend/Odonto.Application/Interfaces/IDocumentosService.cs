@@ -6,6 +6,6 @@ using Odonto.Application.Documentos;
 
 public interface IDocumentosService
 {
-    Task<byte[]> GerarReceita(ReceitaDTO receita, string email);
-    Task<byte[]> GerarAtestado(AtestadoDTO atestado, string email);
+    Task<byte[]> GerarReceita(ReceitaDTO receita);
+    Task<byte[]> GerarAtestado(AtestadoDTO atestado);
 }

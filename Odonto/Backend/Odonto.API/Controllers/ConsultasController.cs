@@ -96,8 +96,8 @@ public class ConsultasController : ControllerBase
     /// <param name="consultaDto">Objeto da consulta que será cadastrada</param>
     /// <returns>Retorna o objeto da consulta cadastrada</returns>
     [Authorize(Policy = "Secretaria")]
-    [HttpPost("cadastrar-consulta")]
-    public async Task<ActionResult> CadastrarConsulta(CadastrarConsultaDTO dto)
+    [HttpPost("marcar-consulta")]
+    public async Task<ActionResult> MarcarConsulta(CadastrarConsultaDTO dto)
     {
         try
         {
@@ -111,7 +111,7 @@ public class ConsultasController : ControllerBase
                 });
             }
 
-            await _rabbitMqMessageSender.SendMessage(dto, "marcarConsulta");
+            await _rabbitMqMessageSender.SendMessage(dto, "odonto.consultas.marcar");
 
             return Ok("Consulta Marcada com sucesso!");
         }

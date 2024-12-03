@@ -8,10 +8,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Services;
+using Odonto.Application.Services.Queues.Consultas.Sender;
+using Odonto.Application.Services.Queues.Documentos.Consumer;
+using Odonto.Application.Services.Queues.Documentos.Sender;
 using Odonto.Infra.Context;
 using Odonto.Infra.Identity;
 using Odonto.Infra.Interfaces;
 using Odonto.Infra.Repositories;
+using StackExchange.Redis;
 using System.Data;
 using System.Text;
 
@@ -97,9 +101,20 @@ public static class DependecyInjectionConfig
         services.AddScoped<IConsultaService, ConsultaService>();
         services.AddScoped<IDocumentosService, DocumentoService>();
         services.AddScoped<ITokenService, TokenService>();
-        services.AddSingleton<IRabbitMqMessageSender, RabbitMqMessageSender>();
-        services.AddHostedService<RabbitMqMessageConsumer>();
+        services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect("localhost"));
         #endregion services
+
+        #region Senders
+        services.AddSingleton<IRabbitMqMessageSender, RabbitMqMessageSender>();
+        services.AddSingleton<IReceitasMessageSender, ReceitasMessageSender>();
+        services.AddSingleton<IAtestadosMessageSender, AtestadosMessageSender>();
+        #endregion Senders
+
+        #region Consumers
+        services.AddHostedService<RabbitMqMessageConsumer>();
+        services.AddHostedService<AtestadosMessageConsumer>();
+        services.AddHostedService<ReceitasMessageConsumer>();
+        #endregion Consumers
 
         #region Mediatr
 

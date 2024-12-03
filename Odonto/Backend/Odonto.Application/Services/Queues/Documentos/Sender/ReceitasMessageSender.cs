@@ -1,20 +1,20 @@
-﻿using Odonto.Application.DTO;
+﻿using Odonto.API.DTOs.Documentos;
 using Odonto.Application.Interfaces;
 using Odonto.MessageBus;
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
 
-namespace Odonto.Application.Services;
+namespace Odonto.Application.Services.Queues.Documentos.Sender;
 
-public class RabbitMqMessageSender : IRabbitMqMessageSender
+public class ReceitasMessageSender : IReceitasMessageSender
 {
     private readonly string _hostName;
     private readonly string _password;
     private readonly string _username;
     private IConnection _connection;
 
-    public RabbitMqMessageSender()
+    public ReceitasMessageSender()
     {
         _hostName = "localhost";
         _password = "guest";
@@ -23,16 +23,16 @@ public class RabbitMqMessageSender : IRabbitMqMessageSender
 
     public async Task SendMessage(BaseMessage message, string queueName)
     {
-        var factory = new ConnectionFactory
+        ConnectionFactory factory = new ConnectionFactory
         {
             HostName = _hostName,
-            UserName = _username,
             Password = _password,
+            UserName = _username,
         };
 
         _connection = await factory.CreateConnectionAsync();
 
-        var channel = await _connection.CreateChannelAsync();
+        IChannel channel = await _connection.CreateChannelAsync();
 
         await channel.QueueDeclareAsync(queue: queueName, false, false, false, arguments: null);
 
@@ -40,16 +40,14 @@ public class RabbitMqMessageSender : IRabbitMqMessageSender
 
         await channel.BasicPublishAsync(exchange: string.Empty, routingKey: queueName, body: body);
     }
-
     private byte[] GetMessageAsByteArray(BaseMessage message)
     {
         var options = new JsonSerializerOptions
         {
             WriteIndented = true,
         };
-        var json = JsonSerializer.Serialize<CadastrarConsultaDTO>((CadastrarConsultaDTO)message, options);
+        var json = JsonSerializer.Serialize((ReceitaDTO)message, options);
         var body = Encoding.UTF8.GetBytes(json);
         return body;
     }
-
 }

@@ -28,8 +28,8 @@ public class ReceitasMessageConsumer : BackgroundService
         ConnectionFactory factory = new ConnectionFactory
         {
             HostName = "localhost",
-            UserName = "guest",
-            Password = "guest"
+            UserName = "fabio.julio",
+            Password = "@dm1n"
         };
 
         _connection = await factory.CreateConnectionAsync();
@@ -44,8 +44,7 @@ public class ReceitasMessageConsumer : BackgroundService
         consumer.ReceivedAsync += async (_, evt) =>
         {
             string content = Encoding.UTF8.GetString(evt.Body.ToArray());
-
-            ReceitaDTO receita = JsonSerializer.Deserialize<ReceitaDTO>(content);
+            Receita receita = JsonSerializer.Deserialize<Receita>(content);
 
             try
             {
@@ -58,7 +57,6 @@ public class ReceitasMessageConsumer : BackgroundService
                     var base64 = Convert.ToBase64String(receitaRetorno);
 
                     redisDb.StringSet($"receita:{receita.Id}:status", "Finalizado");
-
                     redisDb.StringSet($"receita:{receita.Id}:result", base64);
                 }
                 await _channel.BasicAckAsync(evt.DeliveryTag, false);
@@ -68,8 +66,8 @@ public class ReceitasMessageConsumer : BackgroundService
                 redisDb.StringSet($"receita:{receita.Id}:status", "Falha");
 
                 await _channel.BasicNackAsync(evt.DeliveryTag, false, false);
-
-                Console.WriteLine($"Erro ao processar mensagem: {ex.Message}");
+                
+                throw new Exception($"Erro ao processar mensagem: {ex.Message}");
             }
         };
         await _channel.BasicConsumeAsync(

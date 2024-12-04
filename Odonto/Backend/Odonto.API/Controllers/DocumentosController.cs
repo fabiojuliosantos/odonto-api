@@ -34,7 +34,7 @@ public class DocumentosController : ControllerBase
 
     [Authorize(Policy = "DentistasEnfermeiros")]
     [HttpPost("atestado")]
-    public async Task<ActionResult> GerarAtestado(AtestadoMensagem atestado)
+    public async Task<ActionResult> GerarAtestado(AtestadoDTO atestado)
     {
         try
         {
@@ -45,7 +45,7 @@ public class DocumentosController : ControllerBase
 
             int idAtestado = random.Next(10, 100);
 
-            AtestadoDTO corpoAtestado = _mapper.Map<AtestadoDTO>(atestado);
+            Atestado corpoAtestado = _mapper.Map<Atestado>(atestado);
 
             corpoAtestado.Usuario = usuario;
             corpoAtestado.Id = idAtestado;
@@ -72,7 +72,7 @@ public class DocumentosController : ControllerBase
 
     [Authorize(Policy = "DentistasEnfermeiros")]
     [HttpPost("receita")]
-    public async Task<ActionResult> GerarReceita(ReceitaMensagem receita)
+    public async Task<ActionResult> GerarReceita(ReceitaDTO receita)
     {
         try
         {
@@ -83,7 +83,7 @@ public class DocumentosController : ControllerBase
 
             int idReceita = random.Next(10, 100);
 
-            var corpoReceita = _mapper.Map<ReceitaDTO>(receita);
+            var corpoReceita = _mapper.Map<Receita>(receita);
 
             corpoReceita.Usuario = usuario;
             corpoReceita.Id = idReceita;

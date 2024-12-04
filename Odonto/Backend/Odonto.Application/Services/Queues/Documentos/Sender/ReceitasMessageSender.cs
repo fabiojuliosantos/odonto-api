@@ -17,8 +17,8 @@ public class ReceitasMessageSender : IReceitasMessageSender
     public ReceitasMessageSender()
     {
         _hostName = "localhost";
-        _password = "guest";
-        _username = "guest";
+        _username = "fabio.julio";
+        _password = "@dm1n";
     }
 
     public async Task SendMessage(BaseMessage message, string queueName)
@@ -46,7 +46,7 @@ public class ReceitasMessageSender : IReceitasMessageSender
         {
             WriteIndented = true,
         };
-        var json = JsonSerializer.Serialize((ReceitaDTO)message, options);
+        var json = JsonSerializer.Serialize((Receita)message, options);
         var body = Encoding.UTF8.GetBytes(json);
         return body;
     }

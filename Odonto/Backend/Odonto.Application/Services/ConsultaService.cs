@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Odonto.Application.DTO;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Mediator.Consultas.Commands;
+using Odonto.Application.TratarErros;
 using Odonto.Domain.Entities;
 
 namespace Odonto.Application.Services;
@@ -19,19 +21,26 @@ public class ConsultaService : IConsultaService
 
     public async Task<Consulta> CadastrarConsulta(CadastrarConsultaDTO dto)
     {
-        if (dto is null) throw new Exception("Dados para consulta não foram informados!");
-
-        CadastrarConsultaCommand consultaObjeto = new CadastrarConsultaCommand 
+        try
         {
-            DataConsulta = dto.DataConsulta,
-            DentistaId = dto.DentistaId,
-            PacienteId = dto.PacienteId,
-            Descricao = dto.Descricao
-        };
+            if (dto is null) throw new CustomException("Dados para consulta não foram informados!", StatusCodes.Status400BadRequest);
 
-        Consulta consulta = await _mediator.Send(consultaObjeto);
+            CadastrarConsultaCommand consultaObjeto = new CadastrarConsultaCommand 
+            {
+                DataConsulta = dto.DataConsulta,
+                DentistaId = dto.DentistaId,
+                PacienteId = dto.PacienteId,
+                Descricao = dto.Descricao
+            };
 
-        return consulta;
+            Consulta consulta = await _mediator.Send(consultaObjeto);
+
+            return consulta;
+        }
+        catch (CustomException)
+        {
+            throw;
+        }
     }
 
     #endregion Cadastrar
@@ -42,13 +51,13 @@ public class ConsultaService : IConsultaService
     {
         try
         {
-            if (command is null) throw new Exception("Dados para consulta não foram informados!");
+            if (command is null) throw new CustomException("Dados para consulta não foram informados!", StatusCodes.Status400BadRequest);
 
             Consulta consulta = await _mediator.Send(command);
 
             return consulta;
         }
-        catch (Exception)
+        catch (CustomException)
         {
             throw;
         }
@@ -60,11 +69,19 @@ public class ConsultaService : IConsultaService
 
     public async Task<Consulta> ExcluirConsulta(ExcluirConsultaCommand command)
     {
-        if (command.ConsultaId < 1) throw new Exception("Dados para consulta não foram informados!");
+        try
+        {
+            if (command.ConsultaId < 1) throw new CustomException("Dados para consulta não foram informados!", StatusCodes.Status400BadRequest);
 
-        Consulta consulta = await _mediator.Send(command);
+            Consulta consulta = await _mediator.Send(command);
 
-        return consulta;
+            return consulta;
+        }
+        catch (CustomException) 
+        { 
+            throw; 
+        }
+        
     }
 
     #endregion Excluir
@@ -73,15 +90,35 @@ public class ConsultaService : IConsultaService
 
     public async Task<IEnumerable<Consulta>> BuscarTodasConsultasAsync()
     {
-        BuscarTodasConsultasCommand command = new BuscarTodasConsultasCommand();
-        IEnumerable<Consulta> consultas = await _mediator.Send(command);
-        return consultas;
+        try
+        {
+            BuscarTodasConsultasCommand command = new BuscarTodasConsultasCommand();
+            
+            IEnumerable<Consulta> consultas = await _mediator.Send(command);
+            
+            return consultas;
+        }
+        catch(CustomException ex)
+        {
+            throw;
+        }
     }
 
     public async Task<Consulta> BuscarConsultaPorIdAsync(BuscarConsultaPorIdCommand command)
     {
-        Consulta consulta = await _mediator.Send(command);
-        return consulta;
+        try
+        {
+            if (command is null) throw new CustomException("Dados para consulta não foram informados!", StatusCodes.Status400BadRequest);
+            
+            Consulta consulta = await _mediator.Send(command);
+    
+            return consulta;
+        }
+
+        catch(CustomException ex)
+        {
+            throw;
+        }
     }
 
     #endregion Buscar

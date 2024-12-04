@@ -137,6 +137,7 @@ public static class DependecyInjectionConfig
 
         #endregion Authorization
 
+        #region Cors
         services.AddCors(options =>
         {
             options.AddPolicy("AllowAllOrigins",
@@ -147,7 +148,7 @@ public static class DependecyInjectionConfig
                            .AllowAnyHeader();
                 });
         });
-
+        #endregion Cors
 
         return services;
     }

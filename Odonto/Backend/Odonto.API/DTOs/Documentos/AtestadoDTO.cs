@@ -1,6 +1,6 @@
 ﻿namespace Odonto.API.DTOs.Documentos;
 
-public class AtestadoMensagem
+public class AtestadoDTO
 {
     public int pacienteId { get; set; }
     public string cid10 { get; set; }

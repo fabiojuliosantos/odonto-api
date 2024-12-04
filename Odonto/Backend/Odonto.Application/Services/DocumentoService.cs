@@ -34,7 +34,7 @@ public class DocumentoService : IDocumentosService
     Image marcaDagua = LoadImageWithTransparency(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Img", "logo-peb.png"), 0.25f);
     string logo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Img", "logo.png");
 
-    public async Task<byte[]> GerarAtestado(AtestadoDTO atestado)
+    public async Task<byte[]> GerarAtestado(Atestado atestado)
     {
         BuscarPacientePorIdCommand query = new BuscarPacientePorIdCommand() { PacienteId = atestado.pacienteId };
         BuscarDentistasEmailQuery dentistaQuery = new BuscarDentistasEmailQuery() { DentistaEmail = atestado.Usuario };
@@ -140,7 +140,7 @@ public class DocumentoService : IDocumentosService
         return pdfBytes;
     }
 
-    public async Task<byte[]> GerarReceita(ReceitaDTO receita)
+    public async Task<byte[]> GerarReceita(Receita receita)
     {
         try
         {

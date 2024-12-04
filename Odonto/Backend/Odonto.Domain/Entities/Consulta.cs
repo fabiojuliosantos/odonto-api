@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Odonto.Domain.Entities;
+﻿namespace Odonto.Domain.Entities;
 
 public class Consulta
 {

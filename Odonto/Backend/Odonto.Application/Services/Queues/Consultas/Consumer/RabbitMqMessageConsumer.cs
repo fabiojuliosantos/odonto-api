@@ -23,8 +23,8 @@ public class RabbitMqMessageConsumer : BackgroundService
         var factory = new ConnectionFactory
         {
             HostName = "localhost",
-            UserName = "guest",
-            Password = "guest"
+            UserName = "fabio.julio",
+            Password = "@dm1n"
         };
 
         // Criar conexão e canal de forma assíncrona

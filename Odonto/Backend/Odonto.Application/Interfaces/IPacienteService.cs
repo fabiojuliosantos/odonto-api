@@ -1,7 +1,5 @@
 ﻿using Odonto.Application.Mediator.Pacientes.Commands;
 using Odonto.Domain.Entities;
-using Odonto.Domain.Pagination;
-using X.PagedList;
 
 namespace Odonto.Application.Interfaces;
 

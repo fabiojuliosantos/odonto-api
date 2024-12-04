@@ -1,7 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-
-namespace Odonto.Domain.Entities;
+﻿namespace Odonto.Domain.Entities;
 
 public class Dentista
 {

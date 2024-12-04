@@ -17,7 +17,7 @@ public class OdontoDTOMappingProfile : Profile
         CreateMap<Paciente, PacientesCadastroDTO>().ReverseMap();
         CreateMap<Dentista, DentistasDTO>().ReverseMap();
         CreateMap<Dentista, DentistasCadastroDTO>().ReverseMap();
-        CreateMap<AtestadoDTO, AtestadoMensagem>().ReverseMap();
-        CreateMap<ReceitaDTO, ReceitaMensagem>().ReverseMap();
+        CreateMap<Atestado, AtestadoDTO>().ReverseMap();
+        CreateMap<Receita, ReceitaDTO>().ReverseMap();
     }
 }

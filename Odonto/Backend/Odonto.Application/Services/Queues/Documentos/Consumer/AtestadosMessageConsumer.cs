@@ -27,8 +27,8 @@ public class AtestadosMessageConsumer : BackgroundService
         ConnectionFactory factory = new ConnectionFactory
         {
             HostName = "localhost",
-            UserName = "guest",
-            Password = "guest"
+            UserName = "fabio.julio",
+            Password = "@dm1n"
         };
 
         _connection = await factory.CreateConnectionAsync();
@@ -37,13 +37,12 @@ public class AtestadosMessageConsumer : BackgroundService
         await _channel.QueueDeclareAsync(queue: "odonto.documentos.atestado", false, false, false, arguments: null);
 
         var consumer = new AsyncEventingBasicConsumer(_channel);
-
         var redisDb = _redis.GetDatabase();
 
         consumer.ReceivedAsync += async (_, evt) =>
         {
             string content = Encoding.UTF8.GetString(evt.Body.ToArray());
-            AtestadoDTO atestado = JsonSerializer.Deserialize<AtestadoDTO>(content);
+            Atestado atestado = JsonSerializer.Deserialize<Atestado>(content);
 
             try
             {
@@ -56,7 +55,6 @@ public class AtestadosMessageConsumer : BackgroundService
                     var base64 = Convert.ToBase64String(atestadoRetorno);
 
                     redisDb.StringSet($"atestado:{atestado.Id}:status", "Finalizado");
-
                     redisDb.StringSet($"atestado:{atestado.Id}:result", base64);
                 }
                 await _channel.BasicAckAsync(evt.DeliveryTag, false);
@@ -67,7 +65,7 @@ public class AtestadosMessageConsumer : BackgroundService
 
                 await _channel.BasicNackAsync(evt.DeliveryTag, false, false);
 
-                Console.WriteLine($"Erro ao processar mensagem: {ex.Message}");
+                throw new Exception($"Erro ao processar mensagem: {ex.Message}");
             }
         };
         await _channel.BasicConsumeAsync(

@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Mediator.Dentistas.Commands;
-using Odonto.Domain.Entities;
 using Odonto.Application.TratarErros;
-using Odonto.API.DTO.Dentistas;
+using Odonto.Domain.Entities;
 
 
 namespace Odonto.API.Controllers;
@@ -35,6 +34,7 @@ public class DentistasController : ControllerBase
     /// Busca todos dentistas cadastrados
     /// </summary>
     /// <returns>Retorna os objetos de todos dentistas cadastrados</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Dentista>>> BuscarTodosDentistas()
     {
@@ -43,7 +43,7 @@ public class DentistasController : ControllerBase
             var dentistas = await _service.BuscarTodosDentistasAsync();
             return Ok(dentistas);
         }
-        catch (CustomException ex) 
+        catch (CustomException ex)
         {
             _logger.LogError(ex.StatusCode, ex.Message);
             return StatusCode(ex.StatusCode, new { message = ex.Message });
@@ -55,6 +55,8 @@ public class DentistasController : ControllerBase
     /// </summary>
     /// <param name="id">ID do dentista que irá buscar</param>
     /// <returns>Retorna o objeto do dentista encontrado</returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
     public async Task<ActionResult> BuscarDentistaPorId(int id)
     {
@@ -64,7 +66,7 @@ public class DentistasController : ControllerBase
             Dentista dentista = await _service.BuscarPorIdAsync(command);
             return Ok(dentista);
         }
-        catch (CustomException ex) 
+        catch (CustomException ex)
         {
             _logger.LogError(ex.StatusCode, ex.Message);
             return StatusCode(ex.StatusCode, new { message = ex.Message });
@@ -72,26 +74,30 @@ public class DentistasController : ControllerBase
     }
 
     /// <summary>
-    /// Cadastra um novo dentista [Endpoint Protegido]
+    ///  Cadastra um novo dentista [Endpoint Protegido]
     /// </summary>
-    /// <param name="dentistaDto">Objeto do dentista que será cadastrado</param>
-    /// <returns>Retorna o objeto do dentista cadastrado</returns>
-    /// <exception cref="Exception"></exception>
+    /// <param name="command">Dados do Dentista que será cadastrado</param>
+    /// <returns>Retorna o objeto com as informações do dentista.</returns>
     [HttpPost("")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize]
-    public async Task<ActionResult> CadastrarDentista(CadastrarDentistaCommand command)
+    public async Task<IActionResult> CadastrarDentista(CadastrarDentistaCommand command)
     {
         try
         {
             Dentista dentista = await _service.CadastrarDentista(command);
-            
+
             _logger.LogTrace($"Dentista {dentista.Nome} cadastrado com sucesso!");
+            
             return Ok(dentista);
         }
         catch (CustomException ex)
         {
             _logger.LogError(ex.StatusCode, ex.Message);
-            return StatusCode(ex.StatusCode, new {message = ex.Message});
+            return StatusCode(ex.StatusCode, new { message = ex.Message });
         }
     }
 
@@ -102,16 +108,20 @@ public class DentistasController : ControllerBase
     /// <returns>Retorna o objeto do dentista atualizado</returns>
     /// <exception cref="Exception"></exception>
     [HttpPut("")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize]
     public async Task<ActionResult> AtualizarDentista(AtualizarDentistaCommand command)
     {
-        try 
+        try
         {
             Dentista dentista = await _service.AtualizarDentista(command);
             _logger.LogTrace($"Dentista {dentista.Nome} atualizado com sucesso");
             return Ok(dentista);
         }
-        catch (CustomException ex) 
+        catch (CustomException ex)
         {
             _logger.LogError(ex.StatusCode, ex.Message);
             return StatusCode(ex.StatusCode, new { message = ex.Message });
@@ -125,6 +135,10 @@ public class DentistasController : ControllerBase
     /// <returns>Retorna o objeto do dentista deletado</returns>
     /// <exception cref="Exception"></exception>
     [HttpDelete("")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize]
     public async Task<ActionResult> ExcluirDentista(ExcluirDentistaCommand command)
     {
@@ -134,7 +148,7 @@ public class DentistasController : ControllerBase
             _logger.LogTrace($"Dentista {dentista.Nome} excluído com sucesso");
             return Ok(dentista);
         }
-        catch(CustomException ex)
+        catch (CustomException ex)
         {
             _logger.LogError(ex.StatusCode, ex.Message);
             return StatusCode(ex.StatusCode, new { message = ex.Message });

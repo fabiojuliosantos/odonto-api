@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Odonto.Application.Interfaces;
 using Odonto.Application.Mediator.Pacientes.Commands;
+using Odonto.Application.TratarErros;
 using Odonto.Domain.Entities;
 using Odonto.Infra.Interfaces;
 
@@ -8,21 +10,28 @@ namespace Odonto.Application.Services;
 
 public class PacienteService : IPacienteService
 {
-    private readonly IPacienteRepository _repository;
     private readonly IMediator _mediator;
-    public PacienteService(IPacienteRepository repository,
-                           IMediator mediator)
+    public PacienteService(IMediator mediator)
     {
-        _repository = repository;
         _mediator = mediator;
     }
+
     #region Cadastrar
 
     public async Task<Paciente> CadastrarPaciente(CadastrarPacienteCommand command)
     {
-        if (command is null) throw new Exception("Não foram informados dados para o paciente!");
-        Paciente paciente = await _mediator.Send(command);
-        return paciente;
+        try
+        {
+            if (command is null) throw new CustomException("Não foram informados dados para o paciente!", StatusCodes.Status400BadRequest);
+            
+            Paciente paciente = await _mediator.Send(command);
+            
+            return paciente;
+        }
+        catch (CustomException ex)
+        {
+            throw;
+        }
     }
 
     #endregion Cadastrar
@@ -31,9 +40,18 @@ public class PacienteService : IPacienteService
 
     public async Task<Paciente> AtualizarPaciente(AtualizarPacienteCommand command)
     {
-        if (command is null) throw new Exception("Não foram informados dados para o paciente!");
-        Paciente paciente = await _mediator.Send(command);
-        return paciente;
+        try
+        {
+            if (command is null) throw new CustomException("Não foram informados dados para o paciente!", StatusCodes.Status400BadRequest); ;
+
+            Paciente paciente = await _mediator.Send(command);
+
+            return paciente;
+        }
+        catch (CustomException ex) 
+        {
+            throw; 
+        }
     }
 
     #endregion Atualizar
@@ -42,9 +60,18 @@ public class PacienteService : IPacienteService
 
     public async Task<Paciente> ExcluirPaciente(ExcluirPacienteCommand command)
     {
-        if (command.PacienteId< 1) throw new Exception("Não foram informados dados para o paciente!");
-        Paciente paciente = await _mediator.Send(command);
-        return paciente;
+        try
+        {
+            if (command.PacienteId< 1) throw new CustomException("Não foram informados dados para o paciente!", StatusCodes.Status400BadRequest);
+            
+            Paciente paciente = await _mediator.Send(command);
+            
+            return paciente;
+        }
+        catch (CustomException ex) 
+        {
+            throw; 
+        }
     }
 
     #endregion Excluir
@@ -53,9 +80,18 @@ public class PacienteService : IPacienteService
 
     public async Task<IEnumerable<Paciente>> BuscarTodosPacientesAsync()
     {
-        BuscarTodosPacientesCommand command = new BuscarTodosPacientesCommand();
-        var pacientes = await _mediator.Send(command);
-        return pacientes;
+        try
+        {
+            BuscarTodosPacientesCommand command = new BuscarTodosPacientesCommand();
+            
+            var pacientes = await _mediator.Send(command);
+            
+            return pacientes;
+        }
+        catch (CustomException ex) 
+        {
+            throw;
+        }
     }
 
     public async Task<Paciente> BuscarPacientePorIdAsync(BuscarPacientePorIdCommand command)
@@ -63,11 +99,13 @@ public class PacienteService : IPacienteService
         try
         {
             Paciente paciente = await _mediator.Send(command);
-            if (paciente is null) throw new Exception($"Paciente de id: {command.PacienteId} não foi encontrado!");
+
+            if (paciente is null) throw new CustomException($"Paciente de id: {command.PacienteId} não foi encontrado!", StatusCodes.Status400BadRequest);
+            
             return paciente;
         }
 
-        catch (Exception ex)
+        catch (CustomException ex)
         {
             throw;
         }

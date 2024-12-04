@@ -21,9 +21,10 @@ public class DentistaService : IDentistaService
     {
         try
         {
-            if (command is null) throw new Exception("Não foram informados dados para o(a) Dentista!");
+            if (command is null) throw new CustomException("Não foram informados dados para o(a) Dentista!", StatusCodes.Status400BadRequest);
             
             Dentista dentista = await _mediator.Send(command);
+
             if (dentista is null) throw new CustomException($"Dentista de id: {command.DentistaId} não pôde ser atualizado!", StatusCodes.Status400BadRequest);
             
             return dentista;
@@ -38,9 +39,10 @@ public class DentistaService : IDentistaService
     {
         try
         {
-            if (command.DentistaId < 0) throw new Exception("Valor de id informado é inválido!");
+            if (command.DentistaId < 0) throw new CustomException("Valor de id informado é inválido!", StatusCodes.Status400BadRequest);
 
             Dentista dentista = await _mediator.Send(command);
+
             if (dentista is null) throw new CustomException($"Dentista de id: {command.DentistaId} não foi encontrado!", StatusCodes.Status404NotFound);
             
             return dentista;
@@ -71,6 +73,7 @@ public class DentistaService : IDentistaService
             if (command is null) throw new CustomException("Não foram informados dados para o(a) dentista!", StatusCodes.Status400BadRequest);
             
             Dentista dentista = await _mediator.Send(command);
+
             if (dentista is null) throw new CustomException("Não foi possível cadastrar um novo dentista!", StatusCodes.Status400BadRequest);
             
             return dentista;
@@ -86,11 +89,13 @@ public class DentistaService : IDentistaService
     {
         try
         {
-            if (command.DentistaId < 1) throw new Exception("Valor informado para o id é inválido!");
+            if (command.DentistaId < 1) throw new CustomException("Valor informado para o id é inválido!", StatusCodes.Status400BadRequest);
+            
             var dentista = await _mediator.Send(command);
+            
             return dentista;
         }
-        catch(Exception)
+        catch(CustomException)
         {
             throw;
         }
@@ -98,8 +103,17 @@ public class DentistaService : IDentistaService
 
     public async Task<Dentista> BuscarDentistaEmail(BuscarDentistasEmailQuery query)
     {
-        if (query == null) throw new Exception("Dentista não informado!"/*, StatusCodes.Status400BadRequest*/);
-        Dentista dentista = await _mediator.Send(query);
-        return dentista;
+        try
+        {
+            if (query == null) throw new CustomException("Dentista não informado!", StatusCodes.Status400BadRequest);
+        
+            Dentista dentista = await _mediator.Send(query);
+        
+            return dentista;
+        }
+        catch (CustomException) 
+        {
+            throw;
+        }
     }
 }

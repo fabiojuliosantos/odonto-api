@@ -1,8 +1,12 @@
-﻿namespace Odonto.Application.Documentos;
+﻿using Odonto.MessageBus;
 
-public class Atestado
+namespace Odonto.API.DTOs.Documentos;
+
+public class Atestado : BaseMessage
 {
     public int pacienteId { get; set; }
     public string cid10 { get; set; }
+    public string? Usuario { get; set; }
     public int quantidadeDias { get; set; }
+
 }

@@ -1,6 +1,4 @@
 ﻿using Odonto.Domain.Entities;
-using Odonto.Domain.Pagination;
-using X.PagedList;
 
 namespace Odonto.Infra.Interfaces;
 

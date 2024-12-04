@@ -17,8 +17,8 @@ public class RabbitMqMessageSender : IRabbitMqMessageSender
     public RabbitMqMessageSender()
     {
         _hostName = "localhost";
-        _password = "guest";
-        _username = "guest";
+        _username = "fabio.julio";
+        _password = "@dm1n";
     }
 
     public async Task SendMessage(BaseMessage message, string queueName)
@@ -47,7 +47,7 @@ public class RabbitMqMessageSender : IRabbitMqMessageSender
         {
             WriteIndented = true,
         };
-        var json = JsonSerializer.Serialize((AtestadoDTO)message, options);
+        var json = JsonSerializer.Serialize((Atestado)message, options);
         var body = Encoding.UTF8.GetBytes(json);
         return body;
     }

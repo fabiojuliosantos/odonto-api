@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Odonto.API.DTOs.Consultas;
 using Odonto.API.DTOs.Dentistas;
+using Odonto.API.DTOs.Documentos;
 using Odonto.API.DTOs.Pacientes;
 using Odonto.Domain.Entities;
 
@@ -16,5 +17,7 @@ public class OdontoDTOMappingProfile : Profile
         CreateMap<Paciente, PacientesCadastroDTO>().ReverseMap();
         CreateMap<Dentista, DentistasDTO>().ReverseMap();
         CreateMap<Dentista, DentistasCadastroDTO>().ReverseMap();
+        CreateMap<AtestadoDTO, AtestadoMensagem>().ReverseMap();
+        CreateMap<ReceitaDTO, ReceitaMensagem>().ReverseMap();
     }
 }

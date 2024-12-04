@@ -31,8 +31,4 @@
       <ProjectReference Include="..\Odonto.MessageBus\Odonto.MessageBus.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="DTOs\Documentos\" />
-    </ItemGroup>
-
 </Project>

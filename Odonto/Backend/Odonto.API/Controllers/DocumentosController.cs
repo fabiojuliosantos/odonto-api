@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Odonto.API.AuthenticationFilter;
 using Odonto.API.DTOs.Documentos;
-using Odonto.Application.Documentos;
 using Odonto.Application.Interfaces;
 using Odonto.Application.TratarErros;
 using StackExchange.Redis;
@@ -19,40 +18,44 @@ public class DocumentosController : ControllerBase
     private readonly IAtestadosMessageSender _atestadosMessageSender;
     private readonly IReceitasMessageSender _receitasMessageSender;
     private readonly IConnectionMultiplexer _redis;
+    private readonly IMapper _mapper;
 
-    public DocumentosController(IDocumentosService service, ILogger<DocumentosController> logger, 
-                                IAtestadosMessageSender atestadosMessageSender, IReceitasMessageSender receitasMessageSender, 
-                                IConnectionMultiplexer redis)
+    public DocumentosController(IDocumentosService service, ILogger<DocumentosController> logger,
+                                IAtestadosMessageSender atestadosMessageSender, IReceitasMessageSender receitasMessageSender,
+                                IConnectionMultiplexer redis, IMapper mapper)
     {
         _service = service;
         _logger = logger;
         _atestadosMessageSender = atestadosMessageSender;
         _receitasMessageSender = receitasMessageSender;
         _redis = redis;
+        _mapper = mapper;
     }
 
     [Authorize(Policy = "DentistasEnfermeiros")]
     [HttpPost("atestado")]
-    public async Task<ActionResult> GerarAtestado(AtestadoDTO atestado)
+    public async Task<ActionResult> GerarAtestado(AtestadoMensagem atestado)
     {
         try
         {
             var claims = HttpContext.User.Claims;
 
             string usuario = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var random = new Random();
-            
+            Random random = new Random();
+
             int idAtestado = random.Next(10, 100);
 
-            atestado.Usuario = usuario;
-            
-            atestado.Id = idAtestado;
-            
-            await _atestadosMessageSender.SendMessage(atestado, "odonto.documentos.atestado");
+            AtestadoDTO corpoAtestado = _mapper.Map<AtestadoDTO>(atestado);
+
+            corpoAtestado.Usuario = usuario;
+            corpoAtestado.Id = idAtestado;
+            corpoAtestado.MessageCreated = DateTime.Now;
+
+            await _atestadosMessageSender.SendMessage(corpoAtestado, "odonto.documentos.atestado");
 
             _logger.LogTrace("Atestado solicitado!");
 
-            var retornoAtestado = new 
+            var retornoAtestado = new
             {
                 id_atestado = idAtestado,
                 status = "Atestado em processamento"
@@ -69,7 +72,7 @@ public class DocumentosController : ControllerBase
 
     [Authorize(Policy = "DentistasEnfermeiros")]
     [HttpPost("receita")]
-    public async Task<ActionResult> GerarReceita(ReceitaDTO receita)
+    public async Task<ActionResult> GerarReceita(ReceitaMensagem receita)
     {
         try
         {
@@ -79,10 +82,14 @@ public class DocumentosController : ControllerBase
             var random = new Random();
 
             int idReceita = random.Next(10, 100);
-            receita.Usuario = usuario;
-            receita.Id = idReceita;
 
-            await _receitasMessageSender.SendMessage(receita, "odonto.documentos.receita");
+            var corpoReceita = _mapper.Map<ReceitaDTO>(receita);
+
+            corpoReceita.Usuario = usuario;
+            corpoReceita.Id = idReceita;
+            corpoReceita.MessageCreated = DateTime.Now;
+
+            await _receitasMessageSender.SendMessage(corpoReceita, "odonto.documentos.receita");
 
             _logger.LogTrace("Atestado solicitado!");
 
@@ -178,7 +185,7 @@ public class DocumentosController : ControllerBase
             };
 
             return Ok(atestado);
-       
+
         }
         catch (CustomException ex)
         {

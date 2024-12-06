@@ -1,10 +1,9 @@
-﻿using Odonto.Application.DTO;
+﻿using Odonto.API.DTOs.Documentos;
+using Odonto.Application.Interfaces;
 using Odonto.MessageBus;
 using RabbitMQ.Client;
-using System.Text.Json;
 using System.Text;
-using Odonto.Application.Interfaces;
-using Odonto.API.DTOs.Documentos;
+using System.Text.Json;
 
 namespace Odonto.Application.Services.Queues.Documentos.Sender;
 

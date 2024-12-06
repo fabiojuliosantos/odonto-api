@@ -58,6 +58,7 @@ public class DentistaService : IDentistaService
         try
         {
             BuscarTodosDentistasCommand command = new BuscarTodosDentistasCommand();
+            
             return await _mediator.Send(command);
         }
         catch (CustomException)

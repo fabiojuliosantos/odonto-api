@@ -13,7 +13,6 @@ namespace Odonto.API.Controllers;
 [Route("api/[Controller]")]
 [ApiController]
 [Produces("application/json")]
-
 public class AutenticacaoController : ControllerBase
 {
     private readonly ITokenService _tokenService;

@@ -7,4 +7,6 @@ public interface IDocumentosService
 {
     Task<byte[]> GerarReceita(Receita receita);
     Task<byte[]> GerarAtestado(Atestado atestado);
+    Task EnviarEmail(EnvioEmail email);
+    
 }

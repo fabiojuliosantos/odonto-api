@@ -193,4 +193,34 @@ public class DocumentosController : ControllerBase
             return StatusCode(ex.StatusCode, new { message = ex.Message });
         }
     }
+    [Authorize(Policy = "DentistasEnfermeiros")]
+    [HttpPost("receita-teste")]
+
+    public async Task<ActionResult> envioTeste(ReceitaDTO receita)
+    {
+        try
+        {
+            var claims = HttpContext.User.Claims;
+
+            string usuario = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var random = new Random();
+
+            int idReceita = random.Next(10, 100);
+
+            var corpoReceita = _mapper.Map<Receita>(receita);
+
+            corpoReceita.Usuario = usuario;
+            corpoReceita.Id = idReceita;
+            corpoReceita.MessageCreated = DateTime.Now;
+            
+            await _service.GerarReceita(corpoReceita);
+            
+            return Ok("enviou");
+        }
+        catch (CustomException ex)
+        {
+            _logger.LogError($"Erro: {ex.StatusCode} {ex.Message}");
+            return StatusCode(ex.StatusCode, new { message = ex.Message });
+        }
+    }
 }
